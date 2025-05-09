@@ -8,6 +8,8 @@ export default function Labs() {
   return (
     <div>
       <h1>Saran Jagadeesan Uma</h1>
+      <h2>Section 04</h2>
+      <h2>NU ID: 002324424</h2>
       <h1>Labs</h1>
       <TOC />
       <Routes>

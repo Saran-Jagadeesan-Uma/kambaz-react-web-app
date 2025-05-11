@@ -8,7 +8,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Navigate to="Kambaz" />} />
           <Route path="/Labs/*" element={<Labs />} />
-          <Route path="/Kambaz/*" element={<Kambaz />} />
+          <Route path="/Kambazs/*" element={<Kambaz />} />
         </Routes>
       </div>
     </HashRouter> );}

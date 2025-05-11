@@ -16,6 +16,7 @@ export default function Kambaz() {
           <td valign="top">
             <Routes>
               <Route path="/" element={<Navigate to="Account" />} />
+              <Route path="Kanbaz Home/*" element={<Account />} />
               <Route path="/Account/*" element={<Account />} />
               <Route path="/Dashboard" element={<Dashboard />} />
               <Route path="/Courses/:cid/*" element={<Courses />} />

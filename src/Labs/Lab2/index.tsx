@@ -1,7 +1,28 @@
 import "./index.css";
+import { Container } from "react-bootstrap";
+
+import ForegroundColors from "./ForegroundColors";
+import BackgroundColors from "./BackgroundColors";
+import Borders from "./Borders";
+import Padding from "./Padding";
+import Margins from "./Margins";
+import Corners from "./Corners";
+import Dimensions from "./Dimensions";
+import Positions from "./Positions";
+import Zindex from "./Zindex";
+import Float from "./Float";
+import GridLayout from "./GridLayout";
+import Flex from "./Flex";
+import ReactIconsSampler from "./ReactIcons";
+import BootstrapGrids from "./BootstrapGrids";
+import ScreenSizeLabel from "./ScreenSizeLabel";
+import BootstrapTables from "./BootstrapTables";
+import BootstrapLists from "./BootstrapLists";
+import BootstrapForms from "./BootstrapForms";
+import BootstrapNavigation from "./BootstrapNavigation";
 export default function Lab2() {
   return (
-    <div id="wd-lab2">
+    <Container>
       <h2>Lab 2 - Cascading Style Sheets</h2>
       <h3>Styling with the STYLE attribute</h3>
       <div id="wd-css-id-selectors">
@@ -49,13 +70,62 @@ export default function Lab2() {
         </div>
       </div>
       <div id="wd-css-colors">
-        <h2>Colors</h2>
-        <h3 className="wd-fg-color-blue">Foreground color</h3>
-        <p className="wd-fg-color-red">
-          The text in this paragraph is red but
-          <span className="wd-fg-color-green"> this text is green</span>
-        </p>
+        <ForegroundColors />
       </div>
-    </div>
+      <div>
+        <BackgroundColors />
+      </div>
+      <div>
+        <Borders />
+      </div>
+      <div>
+        <Padding />
+      </div>
+      <div>
+        <Margins />
+      </div>
+      <div>
+        <Corners />
+      </div>
+      <div>
+        <Dimensions />
+      </div>
+      <div>
+        <Positions />
+      </div>
+      <div>
+        <Zindex />
+      </div>
+      <div>
+        <Float />
+      </div>
+      <div>
+        <GridLayout />
+      </div>
+      <div>
+        <Flex />
+      </div>
+      <div>
+        <ReactIconsSampler />
+      </div>
+      <div>
+        <BootstrapGrids />
+      </div>
+      <div>
+        <ScreenSizeLabel />
+      </div>
+      <div>
+        <BootstrapTables />
+      </div>
+      <div>
+        <BootstrapLists />
+      </div>
+      <div>
+        <BootstrapForms />
+      </div>
+      <div>
+        <BootstrapNavigation />
+      </div>
+    </Container>
   );
 }

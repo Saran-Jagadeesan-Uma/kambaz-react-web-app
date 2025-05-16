@@ -12,4 +12,5 @@ export default function Home() {
         </td>
       </tr>
     </table>
-);}
+  );
+}

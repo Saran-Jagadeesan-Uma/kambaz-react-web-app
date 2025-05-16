@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 export default function AssignmentEditor() {
   const [assignmentName, setAssignmentName] = useState("A1 - ENV + HTML");
@@ -34,7 +34,12 @@ export default function AssignmentEditor() {
     "Letter Grade",
     "GPA Scale",
   ];
-  const submissionTypes = ["Online", "On Paper", "No Submission", "External Tool"];
+  const submissionTypes = [
+    "Online",
+    "On Paper",
+    "No Submission",
+    "External Tool",
+  ];
 
   return (
     <div id="wd-assignments-editor">
@@ -43,11 +48,14 @@ export default function AssignmentEditor() {
         id="wd-name"
         value={assignmentName}
         onChange={(e) => setAssignmentName(e.target.value)}
-      /><br /><br />
-      <label htmlFor="wd-description">Description</label><br />
+      />
+      <br />
+      <br />
+      <label htmlFor="wd-description">Description</label>
+      <br />
       <textarea
         id="wd-description"
-        style={{ width: '500px', height: '200px' }}
+        style={{ width: "500px", height: "200px" }}
         value={description}
         onChange={(e) => setDescription(e.target.value)}
       />
@@ -154,7 +162,9 @@ export default function AssignmentEditor() {
                     checked={studentAnnotation}
                     onChange={(e) => setStudentAnnotation(e.target.checked)}
                   />
-                  <label htmlFor="wd-student-annotation">Student Annotation</label>
+                  <label htmlFor="wd-student-annotation">
+                    Student Annotation
+                  </label>
                 </li>
                 <li>
                   <input

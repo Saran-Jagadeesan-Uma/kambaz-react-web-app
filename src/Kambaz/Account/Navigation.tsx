@@ -37,7 +37,7 @@ export default function AccountNavigation() {
           `list-group-item border border-0 ${isActive ? "active" : ""}`
         }
         style={({ isActive }) => ({
-          color: isActive ? "black" : "red",
+          color: isActive ? "green" : "red",
         })}
       >
         Profile

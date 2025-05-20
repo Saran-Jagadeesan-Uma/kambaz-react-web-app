@@ -15,7 +15,15 @@ export default function ModulesControls() {
         Module
       </Button>
       <Dropdown className="float-end me-2">
-        <Dropdown.Toggle variant="secondary" size="lg" id="wd-publish-all-btn">
+        <Dropdown.Toggle
+          style={{
+            backgroundColor: "#ccc",
+            color: "black",
+            borderColor: "#ccc",
+          }}
+          size="lg"
+          id="wd-publish-all-btn"
+        >
           <GreenCheckmark /> Publish All
         </Dropdown.Toggle>
         <Dropdown.Menu>
@@ -38,8 +46,9 @@ export default function ModulesControls() {
           </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
+
       <Button
-        variant="info"
+        style={{ backgroundColor: "#ccc", color: "black", borderColor: "#ccc" }}
         size="lg"
         className="me-1 float-end"
         id="wd-view-progress"
@@ -47,8 +56,9 @@ export default function ModulesControls() {
         <FaEye className="position-relative me-2" style={{ bottom: "1px" }} />
         View Progress
       </Button>
+
       <Button
-        variant="secondary"
+        style={{ backgroundColor: "#ccc", color: "black", borderColor: "#ccc" }}
         size="lg"
         className="me-1 float-end"
         id="wd-collapse-all"

@@ -9,36 +9,12 @@ export default function KambazNavigation() {
   const location = useLocation();
 
   const navItems = [
-    {
-      label: "Account",
-      icon: <FaRegCircleUser className="fs-1 text-danger" />,
-      path: "/Kambaz/Account",
-    },
-    {
-      label: "Dashboard",
-      icon: <AiOutlineDashboard className="fs-1 text-danger" />,
-      path: "/Kambaz/Dashboard",
-    },
-    {
-      label: "Courses",
-      icon: <LiaBookSolid className="fs-1 text-danger" />,
-      path: "/Kambaz/Courses",
-    },
-    {
-      label: "Calendar",
-      icon: <IoCalendarOutline className="fs-1 text-danger" />,
-      path: "/Kambaz/Calendar",
-    },
-    {
-      label: "Inbox",
-      icon: <FaInbox className="fs-1 text-danger" />,
-      path: "/Kambaz/Inbox",
-    },
-    {
-      label: "Labs",
-      icon: <LiaCogSolid className="fs-1 text-danger" />,
-      path: "/labs",
-    },
+    { label: "Account", icon: FaRegCircleUser, path: "/Kambaz/Account" },
+    { label: "Dashboard", icon: AiOutlineDashboard, path: "/Kambaz/Dashboard" },
+    { label: "Courses", icon: LiaBookSolid, path: "/Kambaz/Courses" },
+    { label: "Calendar", icon: IoCalendarOutline, path: "/Kambaz/Calendar" },
+    { label: "Inbox", icon: FaInbox, path: "/Kambaz/Inbox" },
+    { label: "Labs", icon: LiaCogSolid, path: "/labs" },
   ];
 
   return (
@@ -57,10 +33,17 @@ export default function KambazNavigation() {
         <img src="/images/NEU.png" width="75px" alt="Northeastern Logo" />
       </ListGroup.Item>
 
-      {navItems.map(({ label, icon, path }) => {
+      {navItems.map(({ label, icon: Icon, path }) => {
         const isActive = location.pathname.startsWith(path);
-        const textColor = isActive ? "text-danger" : "text-white";
+        const isAccount = label === "Account";
+
         const backgroundColor = isActive ? "bg-white" : "bg-black";
+        const textColor = isActive ? "text-danger" : "text-white";
+
+        let iconColor = "text-danger";
+        if (isAccount) {
+          iconColor = isActive ? "text-black" : "text-white";
+        }
 
         return (
           <ListGroup.Item
@@ -69,8 +52,8 @@ export default function KambazNavigation() {
             as={Link}
             className={`text-center border-0 py-3 ${backgroundColor} ${textColor}`}
           >
-            <div className={textColor}>{icon}</div>
-            <div className={`small ${textColor}`}>{label}</div>
+            <Icon className={`fs-1 ${iconColor}`} />
+            <div className="small">{label}</div>
           </ListGroup.Item>
         );
       })}

@@ -48,11 +48,7 @@ export default function Profile() {
         id="wd-email"
       />
 
-      <select
-        defaultValue="FACULTY"
-        className="form-select mb-3"
-        id="wd-role"
-      >
+      <select defaultValue="FACULTY" className="form-select mb-3" id="wd-role">
         <option value="USER">User</option>
         <option value="ADMIN">Admin</option>
         <option value="FACULTY">Faculty</option>

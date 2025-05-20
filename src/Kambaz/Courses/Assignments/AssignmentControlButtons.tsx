@@ -1,5 +1,5 @@
 import { FaPlus, FaEllipsisV } from "react-icons/fa";
-import "./styles.css"
+import "./styles.css";
 
 export default function AssignmentControlButtons() {
   return (

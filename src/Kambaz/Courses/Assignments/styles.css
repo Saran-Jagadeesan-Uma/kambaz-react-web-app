@@ -1,16 +1,16 @@
 .pill {
   display: inline-block;
-  background-color: #fffafa; 
+  background-color: #fffafa;
   color: #212121;
-  padding: 4px 8px; 
-  border-radius: 15px; 
+  padding: 4px 8px;
+  border-radius: 15px;
   font-size: 14px;
 }
 
 .wd-assignments-controls .input-group {
-  max-width: 1300px; 
-  flex-grow: 1; 
-  margin-right: 1rem; 
+  max-width: 1300px;
+  flex-grow: 1;
+  margin-right: 1rem;
 }
 
 .wd-assignments-controls .input-group-text {
@@ -23,7 +23,6 @@
 }
 
 .wd-assignments-controls > div {
-  display: flex; 
+  display: flex;
   align-items: center;
 }
-

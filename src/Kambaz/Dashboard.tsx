@@ -51,7 +51,9 @@ export default function Dashboard() {
     <div id="wd-dashboard" className="ps-md-5 pe-md-3 pt-3">
       <h1 id="wd-dashboard-title">Dashboard</h1>
       <hr />
-      <h2 id="wd-dashboard-published" className="mb-3">Published Courses ({courses.length})</h2>
+      <h2 id="wd-dashboard-published" className="mb-3">
+        Published Courses ({courses.length})
+      </h2>
       <hr />
       <div id="wd-dashboard-courses">
         <Row xs={1} sm={2} md={3} lg={4} className="g-4 mt-4 mb-4">
@@ -71,7 +73,11 @@ export default function Dashboard() {
                     src={course.image}
                     width="100%"
                     height={160}
-                    style={{ objectFit: "cover", borderTopLeftRadius: "10px", borderTopRightRadius: "10px" }}
+                    style={{
+                      objectFit: "cover",
+                      borderTopLeftRadius: "10px",
+                      borderTopRightRadius: "10px",
+                    }}
                   />
                   <Card.Body className="d-flex flex-column">
                     <Card.Title className="wd-dashboard-course-title text-nowrap overflow-hidden mb-2">
@@ -84,7 +90,9 @@ export default function Dashboard() {
                       {course.description}
                     </Card.Text>
                     <div className="mt-3">
-                      <Button variant="primary" style={{ borderRadius: "5px" }}>Go</Button>
+                      <Button variant="primary" style={{ borderRadius: "5px" }}>
+                        Go
+                      </Button>
                     </div>
                   </Card.Body>
                 </Link>

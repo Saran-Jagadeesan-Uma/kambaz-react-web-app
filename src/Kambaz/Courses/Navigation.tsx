@@ -10,7 +10,7 @@ export default function CourseNavigation() {
           `list-group-item border border-0 ${isActive ? "active" : ""}`
         }
         style={({ isActive }) => ({
-          color: isActive ? "black" : "red", 
+          color: isActive ? "black" : "red",
         })}
       >
         {" "}
@@ -35,7 +35,7 @@ export default function CourseNavigation() {
         className={({ isActive }) =>
           `list-group-item border border-0 ${isActive ? "active" : ""}`
         }
-                style={({ isActive }) => ({
+        style={({ isActive }) => ({
           color: isActive ? "black" : "red",
         })}
       >
@@ -48,7 +48,7 @@ export default function CourseNavigation() {
         className={({ isActive }) =>
           `list-group-item border border-0 ${isActive ? "active" : ""}`
         }
-                style={({ isActive }) => ({
+        style={({ isActive }) => ({
           color: isActive ? "black" : "red",
         })}
       >
@@ -61,7 +61,7 @@ export default function CourseNavigation() {
         className={({ isActive }) =>
           `list-group-item border border-0 ${isActive ? "active" : ""}`
         }
-                style={({ isActive }) => ({
+        style={({ isActive }) => ({
           color: isActive ? "black" : "red",
         })}
       >
@@ -74,7 +74,7 @@ export default function CourseNavigation() {
         className={({ isActive }) =>
           `list-group-item border border-0 ${isActive ? "active" : ""}`
         }
-                style={({ isActive }) => ({
+        style={({ isActive }) => ({
           color: isActive ? "black" : "red",
         })}
       >
@@ -87,7 +87,7 @@ export default function CourseNavigation() {
         className={({ isActive }) =>
           `list-group-item border border-0 ${isActive ? "active" : ""}`
         }
-                style={({ isActive }) => ({
+        style={({ isActive }) => ({
           color: isActive ? "black" : "red",
         })}
       >

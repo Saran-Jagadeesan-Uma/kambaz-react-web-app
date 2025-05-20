@@ -1,5 +1,5 @@
 import { FaSearch, FaPlus } from "react-icons/fa";
-import "./styles.css"
+import "./styles.css";
 
 export default function AssignmentsControls() {
   return (

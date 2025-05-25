@@ -20,5 +20,5 @@ export default function Kambaz() {
         </Routes>
       </div>
     </div>
-  );
-}
+);}
+

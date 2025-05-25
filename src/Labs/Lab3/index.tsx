@@ -78,7 +78,6 @@ export default function Lab3() {
         voluptates.
       </Highlight>{" "}
       <PathParameters />
-      <AddPathParameters />
     </div>
   );
 }

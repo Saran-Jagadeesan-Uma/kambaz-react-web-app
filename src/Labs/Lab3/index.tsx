@@ -30,7 +30,6 @@ import TodoList from "./TodoList";
 import VariablesAndConstants from "./VariablesAndConstants";
 import VariableTypes from "./VariableTypes";
 import Highlight from "./Highlight";
-import AddPathParameters from "./AddPathParameters";
 import PathParameters from "./PathParameters";
 
 export default function Lab3() {

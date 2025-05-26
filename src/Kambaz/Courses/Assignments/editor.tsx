@@ -1,16 +1,27 @@
+import { useParams, Link } from "react-router-dom";
 import { Form, Button, Row, Col } from "react-bootstrap";
+import * as db from "../../Database"; // make sure this points to your correct database file
 
 export default function AssignmentEditor() {
+  const { cid, aid } = useParams();
+  const assignment = db.assignments.find((a) => a._id === aid);
+
+  if (!assignment) {
+    return <div className="container mt-5">Assignment not found.</div>;
+  }
+
   return (
     <div id="wd-assignments-editor" className="container mt-5">
       <Form>
+        {/* Assignment Title */}
         <Form.Group controlId="wd-name" className="mb-4">
           <Form.Label>
             <h3>Assignment Name</h3>
           </Form.Label>
-          <Form.Control defaultValue="A1" />
+          <Form.Control defaultValue={assignment.title} />
         </Form.Group>
 
+        {/* Description */}
         <Form.Label>
           <h4>Description</h4>
         </Form.Label>
@@ -42,15 +53,17 @@ export default function AssignmentEditor() {
           landing page.
         </div>
 
+        {/* Points */}
         <Form.Group as={Row} className="mb-4" controlId="wd-points">
           <Form.Label column lg={4} className="text-lg-end">
             Points
           </Form.Label>
           <Col lg={8}>
-            <Form.Control defaultValue={100} />
+            <Form.Control defaultValue={assignment.points || 100} />
           </Col>
         </Form.Group>
 
+        {/* Assignment Group */}
         <Form.Group as={Row} className="mb-4" controlId="wd-groups">
           <Form.Label column lg={4} className="text-lg-end">
             Assignment Group
@@ -63,6 +76,7 @@ export default function AssignmentEditor() {
           </Col>
         </Form.Group>
 
+        {/* Display Grade As */}
         <Form.Group as={Row} className="mb-4" controlId="wd-display-grade-as">
           <Form.Label column lg={4} className="text-lg-end">
             Display Grade as
@@ -75,6 +89,7 @@ export default function AssignmentEditor() {
           </Col>
         </Form.Group>
 
+        {/* Submission Type */}
         <Form.Group as={Row} className="mb-4" controlId="wd-submission-type">
           <Form.Label column lg={4} className="text-lg-end">
             Submission Type
@@ -85,10 +100,7 @@ export default function AssignmentEditor() {
               <option value="2">OFFLINE</option>
             </Form.Select>
 
-            <p>
-              <b>Online Entry Options</b>
-            </p>
-
+            <p><b>Online Entry Options</b></p>
             {[
               { id: "wd-text-entry", label: "Text entry" },
               { id: "wd-website-url", label: "Website URL" },
@@ -107,6 +119,7 @@ export default function AssignmentEditor() {
           </Col>
         </Form.Group>
 
+        {/* Assign */}
         <Form.Group as={Row} className="mb-4" controlId="wd-assign">
           <Form.Label column lg={4} className="text-lg-end">
             Assign
@@ -119,14 +132,20 @@ export default function AssignmentEditor() {
 
             <Form.Group controlId="wd-due-date" className="mb-4">
               <Form.Label>Due</Form.Label>
-              <Form.Control type="date" defaultValue="2024-05-13" />
+              <Form.Control
+                type="date"
+                defaultValue={assignment.dueDate || "2024-05-13"}
+              />
             </Form.Group>
 
             <Row>
               <Col xs={6}>
                 <Form.Group controlId="wd-available-from">
                   <Form.Label>Available from</Form.Label>
-                  <Form.Control type="date" defaultValue="2024-05-06" />
+                  <Form.Control
+                    type="date"
+                    defaultValue={assignment.availableFrom || "2024-05-06"}
+                  />
                 </Form.Group>
               </Col>
               <Col xs={6}>
@@ -141,13 +160,18 @@ export default function AssignmentEditor() {
 
         <hr />
 
+        {/* Buttons */}
         <div className="d-flex justify-content-end">
-          <Button variant="secondary" className="me-2" type="button">
-            Cancel
-          </Button>
-          <Button variant="danger" type="submit">
-            Save
-          </Button>
+          <Link to={`/Kambaz/Courses/${cid}/Assignments`}>
+            <Button variant="secondary" className="me-2" type="button">
+              Cancel
+            </Button>
+          </Link>
+          <Link to={`/Kambaz/Courses/${cid}/Assignments`}>
+            <Button variant="danger" type="submit">
+              Save
+            </Button>
+          </Link>
         </div>
       </Form>
     </div>

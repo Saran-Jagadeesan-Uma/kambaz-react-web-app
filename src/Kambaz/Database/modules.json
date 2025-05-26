@@ -81,156 +81,36 @@
     "_id": "M201",
     "name": "Fundamentals of Aerodynamics",
     "description": "Basic aerodynamic concepts and fluid dynamics principles.",
-    "course": "RS102",
-    "lessons": [
-      {
-        "_id": "L401",
-        "name": "Basic Fluid Dynamics",
-        "description": "Introduction to fluid dynamics principles.",
-        "module": "M201"
-      },
-      {
-        "_id": "L402",
-        "name": "Forces on Airfoils",
-        "description": "Understanding lift, drag, and aerodynamic forces.",
-        "module": "M201"
-      },
-      {
-        "_id": "L403",
-        "name": "Flow Patterns",
-        "description": "Analyzing laminar and turbulent flows.",
-        "module": "M201"
-      }
-    ]
+    "course": "RS102"
   },
   {
     "_id": "M202",
     "name": "Subsonic and Supersonic Flow",
     "description": "Understanding subsonic and supersonic aerodynamic behaviors.",
-    "course": "RS102",
-    "lessons": [
-      {
-        "_id": "L501",
-        "name": "Subsonic Flow Characteristics",
-        "description": "Characteristics and behavior of subsonic flows.",
-        "module": "M202"
-      },
-      {
-        "_id": "L502",
-        "name": "Supersonic Flow and Shock Waves",
-        "description": "Behavior of supersonic flow and formation of shock waves.",
-        "module": "M202"
-      },
-      {
-        "_id": "L503",
-        "name": "Transonic and Hypersonic Regimes",
-        "description": "Exploring flow transitions and high-speed aerodynamics.",
-        "module": "M202"
-      }
-    ]
+    "course": "RS102"
   },
   {
     "_id": "M203",
     "name": "Aerodynamic Heating",
     "description": "Study of aerodynamic heating and thermal protection systems.",
-    "course": "RS102",
-    "lessons": [
-      {
-        "_id": "L601",
-        "name": "Thermal Loads on Vehicles",
-        "description": "Sources and effects of aerodynamic heating.",
-        "module": "M203"
-      },
-      {
-        "_id": "L602",
-        "name": "Heat Transfer Mechanisms",
-        "description": "Conduction, convection, and radiation in aerospace contexts.",
-        "module": "M203"
-      },
-      {
-        "_id": "L603",
-        "name": "Thermal Protection Systems",
-        "description": "Design and function of thermal protection systems (TPS).",
-        "module": "M203"
-      }
-    ]
+    "course": "RS102"
   },
   {
     "_id": "M301",
     "name": "Spacecraft Structural Design",
     "description": "Fundamentals of designing spacecraft structures and materials selection.",
-    "course": "RS103",
-    "lessons": [
-      {
-        "_id": "L701",
-        "name": "Structural Requirements",
-        "description": "Understanding structural loads in space missions.",
-        "module": "M301"
-      },
-      {
-        "_id": "L702",
-        "name": "Material Selection",
-        "description": "Choosing appropriate materials for spacecraft design.",
-        "module": "M301"
-      },
-      {
-        "_id": "L703",
-        "name": "Vibration and Fatigue",
-        "description": "Analyzing structural vibration and fatigue factors.",
-        "module": "M301"
-      }
-    ]
+    "course": "RS103"
   },
   {
     "_id": "M302",
     "name": "Orbital Mechanics",
     "description": "Understanding orbital dynamics and mission planning.",
-    "course": "RS103",
-    "lessons": [
-      {
-        "_id": "L801",
-        "name": "Kepler's Laws",
-        "description": "Application of Kepler’s laws in orbital dynamics.",
-        "module": "M302"
-      },
-      {
-        "_id": "L802",
-        "name": "Orbital Transfers",
-        "description": "Hohmann and bi-elliptic transfer orbits.",
-        "module": "M302"
-      },
-      {
-        "_id": "L803",
-        "name": "Orbital Maneuvers",
-        "description": "Delta-v budgeting and maneuver planning.",
-        "module": "M302"
-      }
-    ]
+    "course": "RS103"
   },
   {
     "_id": "M303",
     "name": "Spacecraft Systems Engineering",
     "description": "Overview of spacecraft systems and subsystems engineering.",
-    "course": "RS103",
-    "lessons": [
-      {
-        "_id": "L901",
-        "name": "Systems Engineering Process",
-        "description": "Introduction to systems engineering in space projects.",
-        "module": "M303"
-      },
-      {
-        "_id": "L902",
-        "name": "Subsystems Overview",
-        "description": "Overview of major spacecraft subsystems.",
-        "module": "M303"
-      },
-      {
-        "_id": "L903",
-        "name": "Integration and Testing",
-        "description": "Integration, validation, and testing of spacecraft systems.",
-        "module": "M303"
-      }
-    ]
+    "course": "RS103"
   }
 ]

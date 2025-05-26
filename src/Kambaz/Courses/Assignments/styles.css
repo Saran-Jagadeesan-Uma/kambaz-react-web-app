@@ -1,0 +1,28 @@
+.pill {
+  display: inline-block;
+  background-color: #fffafa;
+  color: #212121;
+  padding: 4px 8px;
+  border-radius: 15px;
+  font-size: 14px;
+}
+
+.wd-assignments-controls .input-group {
+  max-width: 1300px;
+  flex-grow: 1;
+  margin-right: 1rem;
+}
+
+.wd-assignments-controls .input-group-text {
+  background-color: white;
+  border-right: 0;
+}
+
+.wd-assignments-controls .form-control {
+  border-left: 0;
+}
+
+.wd-assignments-controls > div {
+  display: flex;
+  align-items: center;
+}

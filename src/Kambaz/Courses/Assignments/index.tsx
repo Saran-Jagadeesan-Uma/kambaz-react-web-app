@@ -1,41 +1,81 @@
+import { useParams } from "react-router-dom";
+import * as db from "../../Database";
+import { BsGripVertical } from "react-icons/bs";
+import { HiOutlinePencilAlt, HiCheckCircle } from "react-icons/hi";
+import { FaEllipsisV } from "react-icons/fa";
+import { ListGroup, Row, Col } from "react-bootstrap";
+import AssignmentControlButtons from "./AssignmentControlButtons";
+import AssignmentsControls from "./AssignmentsControls";
+
 export default function Assignments() {
-    return (
-      <div id="wd-assignments">
-        <input placeholder="Search for Assignments"
-               id="wd-search-assignment" />
-        <button id="wd-add-assignment-group">+ Group</button>
-        <button id="wd-add-assignment">+ Assignment</button>
-        <h3 id="wd-assignments-title">
-          ASSIGNMENTS 40% of Total <button>+</button> </h3>
-        <ul id="wd-assignment-list">
-          <li className="wd-assignment-list-item">
-            <a href="#/Kambaz/Courses/1234/Assignments/123"
-               className="wd-assignment-link" >
-              A1 - ENV + HTML
-            </a>
-            <br />
-            <span>Multiple Modules | Not available until May 6 at 12:00am | </span>
-            <strong>Due May 13 at 11:59pm | 100 pts</strong>
-          </li>
-          <li className="wd-assignment-list-item">
-            <a href="#/Kambaz/Courses/1234/Assignments/124"
-               className="wd-assignment-link" >
-              A2 - CSS + BOOTSTRAP
-            </a>
-            <br />
-            <span>Multiple Modules | Not available until May 13 at 12:00am | </span>
-            <strong>Due May 20 at 11:59pm | 100 pts</strong>
-          </li>
-          <li className="wd-assignment-list-item">
-            <a href="#/Kambaz/Courses/1234/Assignments/125"
-               className="wd-assignment-link" >
-              A3 - JAVASCRIPT + REACT
-            </a>
-            <br />
-            <span>Multiple Modules | Not available until May 20 at 12:00am | </span>
-            <strong>Due May 27 at 11:59pm | 100 pts</strong>
-          </li>
-        </ul>
-      </div>
-    );
-  }
+  const { cid } = useParams(); // ✅ use 'cid' instead of 'courseId'
+
+  console.log("cid:", cid); // ✅ check if the correct ID is received
+
+  const assignments = db.assignments.filter(
+    (assignment) => assignment.course === cid
+  );
+
+  return (
+    <div className="wd-assignments p-4">
+      <AssignmentsControls />
+      <br />
+      <br />
+      <br />
+      <br />
+      <ListGroup id="wd-modules" className="rounded-0">
+        <ListGroup.Item
+          as="li"
+          className="wd-module p-0 mb-4 fs-5 border-bottom border-secondary"
+        >
+          <div className="d-flex justify-content-between align-items-center p-3 ps-2 bg-secondary text-white">
+            <div className="d-flex align-items-center">
+              <BsGripVertical className="me-2 fs-3" />
+              Assignments
+            </div>
+            <AssignmentControlButtons />
+          </div>
+
+          <ListGroup as="ul" className="wd-lessons rounded-0">
+            {assignments.length === 0 ? (
+              <ListGroup.Item className="p-3 text-muted">
+                No assignments found for this course.
+              </ListGroup.Item>
+            ) : (
+              assignments.map(({ _id, title }) => (
+                <ListGroup.Item as="li" key={_id} className="wd-lesson p-3 ps-1">
+                  <Row className="assignment-item py-3 align-items-center">
+                    <Col md={1} className="d-flex align-items-center">
+                      <BsGripVertical className="me-2 fs-3" />
+                      <HiOutlinePencilAlt className="me-2 fs-3 text-success" />
+                    </Col>
+                    <Col md={9}>
+                      <b className="d-block">
+                        <a
+                          className="wd-assignment-link text-decoration-none text-black"
+                          href={`#/Kambaz/Courses/${cid}/Assignments/${_id}`}
+                        >
+                          {title}
+                        </a>
+                      </b>
+                      <div className="module-info text-secondary small">
+                        <span>Assignment ID: {_id}</span>
+                      </div>
+                    </Col>
+                    <Col
+                      md={2}
+                      className="text-end d-flex align-items-center justify-content-end"
+                    >
+                      <HiCheckCircle className="me-3 text-success fs-4" />
+                      <FaEllipsisV className="text-secondary fs-5" />
+                    </Col>
+                  </Row>
+                </ListGroup.Item>
+              ))
+            )}
+          </ListGroup>
+        </ListGroup.Item>
+      </ListGroup>
+    </div>
+  );
+}

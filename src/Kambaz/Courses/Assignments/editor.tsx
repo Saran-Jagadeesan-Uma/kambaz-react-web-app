@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { Form, Button, Row, Col } from "react-bootstrap";
-import * as db from "../../Database"; // make sure this points to your correct database file
+import * as db from "../../Database";
 
 export default function AssignmentEditor() {
   const { cid, aid } = useParams();
@@ -13,7 +13,6 @@ export default function AssignmentEditor() {
   return (
     <div id="wd-assignments-editor" className="container mt-5">
       <Form>
-        {/* Assignment Title */}
         <Form.Group controlId="wd-name" className="mb-4">
           <Form.Label>
             <h3>Assignment Name</h3>
@@ -21,7 +20,6 @@ export default function AssignmentEditor() {
           <Form.Control defaultValue={assignment.title} />
         </Form.Group>
 
-        {/* Description */}
         <Form.Label>
           <h4>Description</h4>
         </Form.Label>
@@ -53,7 +51,6 @@ export default function AssignmentEditor() {
           landing page.
         </div>
 
-        {/* Points */}
         <Form.Group as={Row} className="mb-4" controlId="wd-points">
           <Form.Label column lg={4} className="text-lg-end">
             Points
@@ -63,7 +60,6 @@ export default function AssignmentEditor() {
           </Col>
         </Form.Group>
 
-        {/* Assignment Group */}
         <Form.Group as={Row} className="mb-4" controlId="wd-groups">
           <Form.Label column lg={4} className="text-lg-end">
             Assignment Group
@@ -76,7 +72,6 @@ export default function AssignmentEditor() {
           </Col>
         </Form.Group>
 
-        {/* Display Grade As */}
         <Form.Group as={Row} className="mb-4" controlId="wd-display-grade-as">
           <Form.Label column lg={4} className="text-lg-end">
             Display Grade as
@@ -89,7 +84,6 @@ export default function AssignmentEditor() {
           </Col>
         </Form.Group>
 
-        {/* Submission Type */}
         <Form.Group as={Row} className="mb-4" controlId="wd-submission-type">
           <Form.Label column lg={4} className="text-lg-end">
             Submission Type
@@ -100,7 +94,9 @@ export default function AssignmentEditor() {
               <option value="2">OFFLINE</option>
             </Form.Select>
 
-            <p><b>Online Entry Options</b></p>
+            <p>
+              <b>Online Entry Options</b>
+            </p>
             {[
               { id: "wd-text-entry", label: "Text entry" },
               { id: "wd-website-url", label: "Website URL" },
@@ -119,7 +115,6 @@ export default function AssignmentEditor() {
           </Col>
         </Form.Group>
 
-        {/* Assign */}
         <Form.Group as={Row} className="mb-4" controlId="wd-assign">
           <Form.Label column lg={4} className="text-lg-end">
             Assign
@@ -160,7 +155,6 @@ export default function AssignmentEditor() {
 
         <hr />
 
-        {/* Buttons */}
         <div className="d-flex justify-content-end">
           <Link to={`/Kambaz/Courses/${cid}/Assignments`}>
             <Button variant="secondary" className="me-2" type="button">

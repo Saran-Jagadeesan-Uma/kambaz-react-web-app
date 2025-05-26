@@ -7,7 +7,6 @@ export default function PeopleTable() {
   const { cid } = useParams();
   const { users, enrollments } = db;
 
-  // Filter users enrolled in the course with id=cid
   const enrolledUsers = users.filter((usr) =>
     enrollments.some((enrollment) => enrollment.user === usr._id && enrollment.course === cid)
   );

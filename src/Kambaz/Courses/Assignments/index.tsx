@@ -8,9 +8,9 @@ import AssignmentControlButtons from "./AssignmentControlButtons";
 import AssignmentsControls from "./AssignmentsControls";
 
 export default function Assignments() {
-  const { cid } = useParams(); // ✅ use 'cid' instead of 'courseId'
+  const { cid } = useParams();
 
-  console.log("cid:", cid); // ✅ check if the correct ID is received
+  console.log("cid:", cid);
 
   const assignments = db.assignments.filter(
     (assignment) => assignment.course === cid
@@ -43,7 +43,11 @@ export default function Assignments() {
               </ListGroup.Item>
             ) : (
               assignments.map(({ _id, title }) => (
-                <ListGroup.Item as="li" key={_id} className="wd-lesson p-3 ps-1">
+                <ListGroup.Item
+                  as="li"
+                  key={_id}
+                  className="wd-lesson p-3 ps-1"
+                >
                   <Row className="assignment-item py-3 align-items-center">
                     <Col md={1} className="d-flex align-items-center">
                       <BsGripVertical className="me-2 fs-3" />

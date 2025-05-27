@@ -129,7 +129,7 @@ export default function AssignmentEditor() {
               <Form.Label>Due</Form.Label>
               <Form.Control
                 type="date"
-                defaultValue={assignment.dueDate || "2024-05-13"}
+                defaultValue={assignment.due || "2024-05-13"}
               />
             </Form.Group>
 

@@ -1,23 +1,16 @@
-import { useDispatch } from "react-redux";
 import { deleteTodo, setTodo } from "./todosReducer";
-import { ListGroup, Button} from "react-bootstrap";
-
-export default function TodoItem({todo}) {
+import { useDispatch } from "react-redux";
+export default function TodoItem({
+  todo,
+}: {
+  todo: { id: string; title: string };
+}) {
   const dispatch = useDispatch();
   return (
-    <ListGroup.Item key={todo.id}>
-      <Button
-        onClick={() => dispatch(deleteTodo(todo.id))}
-        id="wd-delete-todo-click"
-      >
-        {" "}
-        Delete{" "}
-      </Button>
-      <Button onClick={() => dispatch(setTodo(todo))} id="wd-set-todo-click">
-        {" "}
-        Edit{" "}
-      </Button>
+    <li key={todo.id} className="list-group-item">
+      <button onClick={() => dispatch(deleteTodo(todo.id))}>Delete </button>
+      <button onClick={() => dispatch(setTodo(todo))}>Edit </button>
       {todo.title}
-    </ListGroup.Item>
+    </li>
   );
 }

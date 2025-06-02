@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Link as ReactRouterLink } from "react-router-dom";
 import { Card, Row, Col, Button, FormControl } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleEnrollment, toggleShowAllEnrollments } from "./reducer";
@@ -146,10 +147,14 @@ export default function Dashboard({
                   </Link>
 
                   <Card.Body className="d-flex justify-content-between align-items-center">
-                    <Button variant="primary" size="sm" as={Link} to={`/Kambaz/Courses/${c._id}/Home`}>
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      as={ReactRouterLink as any}
+                      to={`/Kambaz/Courses/${c._id}/Home`}
+                    >
                       Go
                     </Button>
-
                     {isFaculty && (
                       <div>
                         <Button

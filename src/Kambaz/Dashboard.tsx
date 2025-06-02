@@ -101,7 +101,7 @@ export default function Dashboard({
           Published Courses ({filteredCourses.length})
         </h2>
         <Button onClick={() => dispatch(toggleShowAllEnrollments())}>
-          {showAllEnrollments ? "Show Enrolled Only" : "Show All Enrollments"}
+          {showAllEnrollments ? "Show Enrolled Only" : "Show All Courses"}
         </Button>
       </div>
       <hr />

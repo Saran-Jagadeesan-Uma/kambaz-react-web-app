@@ -1,33 +1,76 @@
-import { useParams, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import { Form, Button, Row, Col } from "react-bootstrap";
-import * as db from "../../Database"; // make sure this points to your correct database file
+import { addAssignment, updateAssignment } from "./reducer";
 
 export default function AssignmentEditor() {
   const { cid, aid } = useParams();
-  const assignment = db.assignments.find((a) => a._id === aid);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  if (!assignment) {
-    return <div className="container mt-5">Assignment not found.</div>;
-  }
+  const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+  const isEditing = aid !== "new";
+  const existingAssignment = isEditing
+    ? assignments.find((a: any) => a._id === aid)
+    : null;
+
+  const [assignment, setAssignment] = useState({
+    title: "",
+    description: "",
+    points: 100,
+    dueDate: "",
+    availableFromDate: "",
+    availableUntilDate: "",
+    course: cid || "",
+  });
+
+  useEffect(() => {
+    if (isEditing && existingAssignment) {
+      setAssignment({
+        title: existingAssignment.title || "",
+        description: existingAssignment.description || "",
+        points: existingAssignment.points || 100,
+        dueDate: existingAssignment.dueDate || "",
+        availableFromDate: existingAssignment.availableFromDate || "",
+        availableUntilDate: existingAssignment.availableUntilDate || "",
+        course: existingAssignment.course || cid || "",
+      });
+    }
+  }, [isEditing, existingAssignment, cid]);
+
+  const handleSave = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isEditing) {
+      dispatch(updateAssignment({ ...assignment, _id: aid }));
+    } else {
+      dispatch(addAssignment(assignment));
+    }
+    navigate(`/Kambaz/Courses/${cid}/Assignments`);
+  };
 
   return (
     <div id="wd-assignments-editor" className="container mt-5">
-      <Form>
-        {/* Assignment Title */}
+      <Form onSubmit={handleSave}>
         <Form.Group controlId="wd-name" className="mb-4">
           <Form.Label>
             <h3>Assignment Name</h3>
           </Form.Label>
-          <Form.Control defaultValue={assignment.title} />
+          <Form.Control
+            value={assignment.title}
+            onChange={(e) =>
+              setAssignment({ ...assignment, title: e.target.value })
+            }
+          />
         </Form.Group>
 
-        {/* Description */}
         <Form.Label>
           <h4>Description</h4>
         </Form.Label>
+
         <div
           className="form-control mb-4"
-          style={{ height: "200px", overflowY: "auto", whiteSpace: "pre-wrap" }}
+          style={{ height: "auto", padding: "1rem", overflowY: "auto" }}
         >
           The assignment is{" "}
           <a
@@ -43,7 +86,7 @@ export default function AssignmentEditor() {
           Netlify.
           <br />
           The landing page should include the following:
-          <ul>
+          <ul className="mt-2 mb-2">
             <li>Your full name and section</li>
             <li>Links to each of the lab assignments</li>
             <li>Link to the Kambaz application</li>
@@ -53,17 +96,24 @@ export default function AssignmentEditor() {
           landing page.
         </div>
 
-        {/* Points */}
         <Form.Group as={Row} className="mb-4" controlId="wd-points">
           <Form.Label column lg={4} className="text-lg-end">
             Points
           </Form.Label>
           <Col lg={8}>
-            <Form.Control defaultValue={assignment.points || 100} />
+            <Form.Control
+              type="number"
+              value={assignment.points}
+              onChange={(e) =>
+                setAssignment({
+                  ...assignment,
+                  points: parseInt(e.target.value) || 0,
+                })
+              }
+            />
           </Col>
         </Form.Group>
 
-        {/* Assignment Group */}
         <Form.Group as={Row} className="mb-4" controlId="wd-groups">
           <Form.Label column lg={4} className="text-lg-end">
             Assignment Group
@@ -76,7 +126,6 @@ export default function AssignmentEditor() {
           </Col>
         </Form.Group>
 
-        {/* Display Grade As */}
         <Form.Group as={Row} className="mb-4" controlId="wd-display-grade-as">
           <Form.Label column lg={4} className="text-lg-end">
             Display Grade as
@@ -89,7 +138,6 @@ export default function AssignmentEditor() {
           </Col>
         </Form.Group>
 
-        {/* Submission Type */}
         <Form.Group as={Row} className="mb-4" controlId="wd-submission-type">
           <Form.Label column lg={4} className="text-lg-end">
             Submission Type
@@ -100,7 +148,9 @@ export default function AssignmentEditor() {
               <option value="2">OFFLINE</option>
             </Form.Select>
 
-            <p><b>Online Entry Options</b></p>
+            <p>
+              <b>Online Entry Options</b>
+            </p>
             {[
               { id: "wd-text-entry", label: "Text entry" },
               { id: "wd-website-url", label: "Website URL" },
@@ -119,7 +169,6 @@ export default function AssignmentEditor() {
           </Col>
         </Form.Group>
 
-        {/* Assign */}
         <Form.Group as={Row} className="mb-4" controlId="wd-assign">
           <Form.Label column lg={4} className="text-lg-end">
             Assign
@@ -134,7 +183,10 @@ export default function AssignmentEditor() {
               <Form.Label>Due</Form.Label>
               <Form.Control
                 type="date"
-                defaultValue={assignment.dueDate || "2024-05-13"}
+                value={assignment.dueDate}
+                onChange={(e) =>
+                  setAssignment({ ...assignment, dueDate: e.target.value })
+                }
               />
             </Form.Group>
 
@@ -144,14 +196,29 @@ export default function AssignmentEditor() {
                   <Form.Label>Available from</Form.Label>
                   <Form.Control
                     type="date"
-                    defaultValue={assignment.availableFrom || "2024-05-06"}
+                    value={assignment.availableFromDate}
+                    onChange={(e) =>
+                      setAssignment({
+                        ...assignment,
+                        availableFromDate: e.target.value,
+                      })
+                    }
                   />
                 </Form.Group>
               </Col>
               <Col xs={6}>
                 <Form.Group controlId="wd-available-until">
                   <Form.Label>Available until</Form.Label>
-                  <Form.Control type="date" />
+                  <Form.Control
+                    type="date"
+                    value={assignment.availableUntilDate}
+                    onChange={(e) =>
+                      setAssignment({
+                        ...assignment,
+                        availableUntilDate: e.target.value,
+                      })
+                    }
+                  />
                 </Form.Group>
               </Col>
             </Row>
@@ -160,18 +227,15 @@ export default function AssignmentEditor() {
 
         <hr />
 
-        {/* Buttons */}
         <div className="d-flex justify-content-end">
           <Link to={`/Kambaz/Courses/${cid}/Assignments`}>
             <Button variant="secondary" className="me-2" type="button">
               Cancel
             </Button>
           </Link>
-          <Link to={`/Kambaz/Courses/${cid}/Assignments`}>
-            <Button variant="danger" type="submit">
-              Save
-            </Button>
-          </Link>
+          <Button variant="danger" type="submit">
+            Save
+          </Button>
         </div>
       </Form>
     </div>

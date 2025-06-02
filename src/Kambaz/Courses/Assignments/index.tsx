@@ -1,28 +1,84 @@
-import { useParams } from "react-router-dom";
-import * as db from "../../Database";
+import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { deleteAssignment } from "./reducer";
+import { ListGroup, Row, Col } from "react-bootstrap";
 import { BsGripVertical } from "react-icons/bs";
 import { HiOutlinePencilAlt, HiCheckCircle } from "react-icons/hi";
-import { FaEllipsisV } from "react-icons/fa";
-import { ListGroup, Row, Col } from "react-bootstrap";
-import AssignmentControlButtons from "./AssignmentControlButtons";
+
+import DeleteAssignmentDialog from "./AssignmentDeleteDialog";
+import AssignmentDeleteButton from "./AssignmentDeleteButton";
+
+import LessonControlButtons from "./LessonControlButtons";
 import AssignmentsControls from "./AssignmentsControls";
+import AssignmentControlButtons from "./AssignmentControlButtons";
+
+type Assignment = {
+  _id: string;
+  title: string;
+  availableFromDate?: string;
+  dueDate?: string;
+  points: number;
+  course: string;
+};
 
 export default function Assignments() {
-  const { cid } = useParams(); // ✅ use 'cid' instead of 'courseId'
+  const { cid } = useParams();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  console.log("cid:", cid); // ✅ check if the correct ID is received
+  const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
 
-  const assignments = db.assignments.filter(
-    (assignment) => assignment.course === cid
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [assignmentToDelete, setAssignmentToDelete] = useState<string | null>(
+    null
   );
+
+  const courseAssignments: Assignment[] = assignments.filter(
+    (assignment: Assignment) => assignment.course === cid
+  );
+
+  const isFaculty = currentUser?.role === "FACULTY";
+
+  const handleDeleteClick = (assignmentId: string) => {
+    setAssignmentToDelete(assignmentId);
+    setShowDeleteDialog(true);
+  };
+
+  const confirmDelete = () => {
+    if (assignmentToDelete) {
+      dispatch(deleteAssignment(assignmentToDelete));
+    }
+    setShowDeleteDialog(false);
+    setAssignmentToDelete(null);
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteDialog(false);
+    setAssignmentToDelete(null);
+  };
+
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return "Not set";
+    return new Date(dateString).toLocaleDateString(undefined, {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+  };
 
   return (
     <div className="wd-assignments p-4">
-      <AssignmentsControls />
-      <br />
-      <br />
-      <br />
-      <br />
+      {isFaculty && (
+        <AssignmentsControls
+          onAddAssignment={() =>
+            navigate(`/Kambaz/Courses/${cid}/Assignments/new`)
+          }
+          onAddGroup={() => {}}
+        />
+      )}
+
       <ListGroup id="wd-modules" className="rounded-0">
         <ListGroup.Item
           as="li"
@@ -33,49 +89,75 @@ export default function Assignments() {
               <BsGripVertical className="me-2 fs-3" />
               Assignments
             </div>
-            <AssignmentControlButtons />
+            {isFaculty && <AssignmentControlButtons />}
           </div>
 
           <ListGroup as="ul" className="wd-lessons rounded-0">
-            {assignments.length === 0 ? (
+            {courseAssignments.length === 0 ? (
               <ListGroup.Item className="p-3 text-muted">
                 No assignments found for this course.
               </ListGroup.Item>
             ) : (
-              assignments.map(({ _id, title }) => (
-                <ListGroup.Item as="li" key={_id} className="wd-lesson p-3 ps-1">
-                  <Row className="assignment-item py-3 align-items-center">
-                    <Col md={1} className="d-flex align-items-center">
-                      <BsGripVertical className="me-2 fs-3" />
-                      <HiOutlinePencilAlt className="me-2 fs-3 text-success" />
-                    </Col>
-                    <Col md={9}>
-                      <b className="d-block">
-                        <a
-                          className="wd-assignment-link text-decoration-none text-black"
-                          href={`#/Kambaz/Courses/${cid}/Assignments/${_id}`}
-                        >
-                          {title}
-                        </a>
-                      </b>
-                      <div className="module-info text-secondary small">
-                        <span>Assignment ID: {_id}</span>
-                      </div>
-                    </Col>
-                    <Col
-                      md={2}
-                      className="text-end d-flex align-items-center justify-content-end"
-                    >
-                      <HiCheckCircle className="me-3 text-success fs-4" />
-                      <FaEllipsisV className="text-secondary fs-5" />
-                    </Col>
-                  </Row>
-                </ListGroup.Item>
-              ))
+              courseAssignments.map((assignment: Assignment) => {
+                const { _id, title, availableFromDate, dueDate, points } =
+                  assignment;
+
+                return (
+                  <ListGroup.Item
+                    as="li"
+                    key={_id}
+                    className="wd-lesson p-3 ps-1"
+                  >
+                    <Row className="assignment-item py-3 align-items-center">
+                      <Col md={1} className="d-flex align-items-center">
+                        <BsGripVertical className="me-2 fs-3" />
+                        <HiOutlinePencilAlt className="me-2 fs-3 text-success" />
+                      </Col>
+                      <Col md={9}>
+                        <b className="d-block">
+                          <a
+                            className="wd-assignment-link text-decoration-none text-black"
+                            href={`#/Kambaz/Courses/${cid}/Assignments/${_id}`}
+                          >
+                            {title}
+                          </a>
+                        </b>
+                        <div className="module-info text-secondary small">
+                          <span className="text-danger">Multiple Modules</span>{" "}
+                          | <b>Not available until</b>{" "}
+                          {formatDate(availableFromDate)} at 12:00 am |{" "}
+                          <b>Due</b> {formatDate(dueDate)} at 11:59 pm |{" "}
+                          {points} pts
+                        </div>
+                      </Col>
+                      <Col
+                        md={2}
+                        className="text-end d-flex align-items-center justify-content-end"
+                      >
+                        {isFaculty && (
+                          <>
+                            <AssignmentDeleteButton
+                              onDelete={() => handleDeleteClick(_id)}
+                            />
+                          </>
+                        )}
+                        <HiCheckCircle className="me-3 text-success fs-4" />
+                        <LessonControlButtons />
+                      </Col>
+                    </Row>
+                  </ListGroup.Item>
+                );
+              })
             )}
           </ListGroup>
         </ListGroup.Item>
       </ListGroup>
+
+      <DeleteAssignmentDialog
+        show={showDeleteDialog}
+        onCancel={cancelDelete}
+        onConfirm={confirmDelete}
+      />
     </div>
   );
 }

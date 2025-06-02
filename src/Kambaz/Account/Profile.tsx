@@ -31,14 +31,18 @@ export default function Profile() {
         <>
           <FormControl
             value={profile.username}
-            onChange={(e) => setProfile({ ...profile, username: e.target.value })}
+            onChange={(e) =>
+              setProfile({ ...profile, username: e.target.value })
+            }
             className="mb-2"
             placeholder="username"
             id="wd-username"
           />
           <FormControl
             value={profile.password}
-            onChange={(e) => setProfile({ ...profile, password: e.target.value })}
+            onChange={(e) =>
+              setProfile({ ...profile, password: e.target.value })
+            }
             className="mb-2"
             placeholder="password"
             type="password"
@@ -46,14 +50,18 @@ export default function Profile() {
           />
           <FormControl
             value={profile.firstName}
-            onChange={(e) => setProfile({ ...profile, firstName: e.target.value })}
+            onChange={(e) =>
+              setProfile({ ...profile, firstName: e.target.value })
+            }
             className="mb-2"
             placeholder="First Name"
             id="wd-firstname"
           />
           <FormControl
             value={profile.lastName}
-            onChange={(e) => setProfile({ ...profile, lastName: e.target.value })}
+            onChange={(e) =>
+              setProfile({ ...profile, lastName: e.target.value })
+            }
             className="mb-2"
             placeholder="Last Name"
             id="wd-lastname"
@@ -85,7 +93,11 @@ export default function Profile() {
             <option value="STUDENT">Student</option>
           </select>
 
-          <Button onClick={signout} className="btn btn-danger w-100" id="wd-signout-btn">
+          <Button
+            onClick={signout}
+            className="btn btn-danger w-100"
+            id="wd-signout-btn"
+          >
             Sign out
           </Button>
         </>

@@ -6,14 +6,18 @@ import { setCurrentUser } from "./reducer";
 import * as db from "../Database";
 
 export default function Signin() {
-  const [credentials, setCredentials] = useState<{ username?: string; password?: string }>({});
+  const [credentials, setCredentials] = useState<{
+    username?: string;
+    password?: string;
+  }>({});
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const signin = () => {
     const user = db.users.find(
       (u: any) =>
-        u.username === credentials.username && u.password === credentials.password
+        u.username === credentials.username &&
+        u.password === credentials.password
     );
     if (!user) return;
     dispatch(setCurrentUser(user));
@@ -26,7 +30,9 @@ export default function Signin() {
 
       <FormControl
         defaultValue={credentials.username}
-        onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
+        onChange={(e) =>
+          setCredentials({ ...credentials, username: e.target.value })
+        }
         className="mb-2"
         placeholder="username"
         id="wd-username"
@@ -34,7 +40,9 @@ export default function Signin() {
 
       <FormControl
         defaultValue={credentials.password}
-        onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+        onChange={(e) =>
+          setCredentials({ ...credentials, password: e.target.value })
+        }
         className="mb-3"
         placeholder="password"
         type="password"

@@ -11,7 +11,6 @@ export default function AccountNavigation() {
         Account
       </div>
 
-      {/* Only show Signin/Signup if NOT signed in */}
       {!isSignedIn && (
         <>
           <NavLink

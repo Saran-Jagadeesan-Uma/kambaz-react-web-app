@@ -4,7 +4,7 @@ import { BsGripVertical } from "react-icons/bs";
 import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
 
-import { addModule, editModule, updateModule, deleteModule } from "./reducer";
+import { addModule, editModule, updateModule, deleteModule } from "./Coursereducer";
 import ModulesControls from "./ModulesControls";
 import ModuleControlButtons from "./ModuleControlButtons";
 import LessonControlButtons from "./LessonControlButtons";
@@ -20,7 +20,6 @@ export default function Modules() {
 
   return (
     <div>
-      {/* Only FACULTY can see the new module controls */}
       {isFaculty && (
         <ModulesControls
           moduleName={moduleName}
@@ -46,13 +45,14 @@ export default function Modules() {
               <div className="wd-title p-3 ps-2 bg-secondary d-flex align-items-center justify-content-between">
                 <div>
                   <BsGripVertical className="me-2 fs-3" />
-                  {/* Show editable input only if editing and user is FACULTY */}
                   {!module.editing && module.name}
                   {module.editing && isFaculty && (
                     <FormControl
                       className="w-50 d-inline-block"
                       onChange={(e) =>
-                        dispatch(updateModule({ ...module, name: e.target.value }))
+                        dispatch(
+                          updateModule({ ...module, name: e.target.value })
+                        )
                       }
                       onKeyDown={(e) => {
                         if (e.key === "Enter") {
@@ -64,7 +64,6 @@ export default function Modules() {
                     />
                   )}
                 </div>
-                {/* Only FACULTY see the module action buttons */}
                 {isFaculty && (
                   <ModuleControlButtons
                     moduleId={module._id}

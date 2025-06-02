@@ -144,13 +144,17 @@ export default function Dashboard() {
         <h2 id="wd-dashboard-published">
           Published Courses ({filteredCourses.length})
         </h2>
-        <Button
-          onClick={() =>
-            dispatch({ type: "enrollment/toggleShowAllEnrollments" })
-          }
-        >
-          {showAllEnrollments ? "Show Enrolled Only" : "Show All Courses"}
-        </Button>
+
+        {!isFaculty && (
+          <Button
+            onClick={() =>
+              dispatch({ type: "enrollment/toggleShowAllEnrollments" })
+            }
+            variant="primary"
+          >
+            {showAllEnrollments ? "Show Enrolled Only" : "Show All Courses"}
+          </Button>
+        )}
       </div>
       <hr />
 
@@ -222,22 +226,24 @@ export default function Dashboard() {
                       </div>
                     )}
 
-                    <Button
-                      variant={isEnrolled ? "danger" : "success"}
-                      size="sm"
-                      className="ms-2"
-                      onClick={() =>
-                        dispatch({
-                          type: "enrollment/toggleEnrollment",
-                          payload: {
-                            userId: currentUser!._id,
-                            courseId: c._id!,
-                          },
-                        })
-                      }
-                    >
-                      {isEnrolled ? "Unenroll" : "Enroll"}
-                    </Button>
+                    {!isFaculty && (
+                      <Button
+                        variant={isEnrolled ? "danger" : "success"}
+                        size="sm"
+                        className="ms-2"
+                        onClick={() =>
+                          dispatch({
+                            type: "enrollment/toggleEnrollment",
+                            payload: {
+                              userId: currentUser!._id,
+                              courseId: c._id!,
+                            },
+                          })
+                        }
+                      >
+                        {isEnrolled ? "Unenroll" : "Enroll"}
+                      </Button>
+                    )}
                   </Card.Body>
                 </Card>
               </Col>

@@ -6,9 +6,9 @@ import "./styles.css";
 import * as db from "./Database";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-
 import Courses from "./Courses";
 import ProtectedRoute from "./Account/ProtectedRoute";
+
 export default function Kambaz() {
   const [courses, setCourses] = useState<any[]>(db.courses);
   const [course, setCourse] = useState<any>({

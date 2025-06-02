@@ -1,7 +1,19 @@
 import { Link } from "react-router-dom";
 import { Card, Row, Col, Button, FormControl } from "react-bootstrap";
-import { useSelector } from "react-redux";
-import * as db from "./Database";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleEnrollment, toggleShowAllEnrollments } from "./reducer";
+
+type Enrollment = {
+  user: string;
+  course: string;
+};
+
+type Course = {
+  _id: string;
+  name: string;
+  description: string;
+  image?: string;
+};
 
 export default function Dashboard({
   courses,
@@ -11,26 +23,32 @@ export default function Dashboard({
   deleteCourse,
   updateCourse,
 }: {
-  courses: any[];
-  course: any;
-  setCourse: (course: any) => void;
+  courses: Course[];
+  course: Course;
+  setCourse: (course: Course) => void;
   addNewCourse: () => void;
   deleteCourse: (courseId: string) => void;
   updateCourse: () => void;
 }) {
-  const defaultImageUrl = "/images/reactjs.jpg";
+  const dispatch = useDispatch();
   const { currentUser } = useSelector((state: any) => state.accountReducer);
-  const { enrollments } = db;
+  const { enrollments, showAllEnrollments } = useSelector(
+    (state: any) => state.enrollmentReducer
+  );
 
   const isFaculty = currentUser?.role === "FACULTY";
 
-  const enrolledCourses = courses.filter((course) =>
-    enrollments.some(
-      (enrollment) =>
-        enrollment.user === currentUser?._id &&
-        enrollment.course === course._id
-    )
-  );
+  const filteredCourses = showAllEnrollments
+    ? courses
+    : courses.filter((course) =>
+        enrollments.some(
+          (enrollment: Enrollment) =>
+            enrollment.user === currentUser?._id &&
+            enrollment.course === course._id
+        )
+      );
+
+  const defaultImageUrl = "/images/reactjs.jpg";
 
   return (
     <div id="wd-dashboard" className="p-4">
@@ -77,74 +95,101 @@ export default function Dashboard({
         </>
       )}
 
-      <h2 id="wd-dashboard-published">
-        Published Courses ({enrolledCourses.length})
-      </h2>
+      <div className="d-flex justify-content-between align-items-center">
+        <h2 id="wd-dashboard-published">
+          Published Courses ({filteredCourses.length})
+        </h2>
+        <Button onClick={() => dispatch(toggleShowAllEnrollments())}>
+          {showAllEnrollments ? "Show Enrolled Only" : "Show All Enrollments"}
+        </Button>
+      </div>
       <hr />
 
       <div id="wd-dashboard-courses">
         <Row xs={1} md={5} className="g-4">
-          {enrolledCourses.map((c) => (
-            <Col
-              key={c._id}
-              className="wd-dashboard-course"
-              style={{ width: "300px" }}
-            >
-              <Card>
-                <Link
-                  to={`/Kambaz/Courses/${c._id}/Home`}
-                  className="wd-dashboard-course-link text-decoration-none text-dark"
-                >
-                  <Card.Img
-                    src={c.image || defaultImageUrl}
-                    variant="top"
-                    width="100%"
-                    height={160}
-                    alt={c.name}
-                  />
-                  <Card.Body className="card-body">
-                    <Card.Title className="wd-dashboard-course-title text-nowrap overflow-hidden">
-                      {c.name}
-                    </Card.Title>
-                    <Card.Text
-                      className="wd-dashboard-course-description overflow-hidden"
-                      style={{ height: "100px" }}
-                    >
-                      {c.description}
-                    </Card.Text>
-                    <div className="d-flex justify-content-between">
-                      <Button variant="primary">Go</Button>
+          {filteredCourses.map((c) => {
+            const isEnrolled = enrollments.some(
+              (enrollment: Enrollment) =>
+                enrollment.user === currentUser?._id &&
+                enrollment.course === c._id
+            );
+            return (
+              <Col
+                key={c._id}
+                className="wd-dashboard-course"
+                style={{ width: "300px" }}
+              >
+                <Card>
+                  {/* Only the image and title link to course home */}
+                  <Link
+                    to={`/Kambaz/Courses/${c._id}/Home`}
+                    className="wd-dashboard-course-link text-decoration-none text-dark"
+                  >
+                    <Card.Img
+                      src={c.image || defaultImageUrl}
+                      variant="top"
+                      width="100%"
+                      height={160}
+                      alt={c.name}
+                    />
+                    <Card.Body className="card-body">
+                      <Card.Title className="wd-dashboard-course-title text-nowrap overflow-hidden">
+                        {c.name}
+                      </Card.Title>
+                      <Card.Text
+                        className="wd-dashboard-course-description overflow-hidden"
+                        style={{ height: "100px" }}
+                      >
+                        {c.description}
+                      </Card.Text>
+                    </Card.Body>
+                  </Link>
 
-                      {isFaculty && (
-                        <div>
-                          <Button
-                            className="btn btn-warning me-2"
-                            id="wd-edit-course-click"
-                            onClick={(event) => {
-                              event.preventDefault();
-                              setCourse(c);
-                            }}
-                          >
-                            Edit
-                          </Button>
-                          <Button
-                            className="btn btn-danger"
-                            id="wd-delete-course-click"
-                            onClick={(event) => {
-                              event.preventDefault();
-                              deleteCourse(c._id);
-                            }}
-                          >
-                            Delete
-                          </Button>
-                        </div>
-                      )}
-                    </div>
+                  <Card.Body className="d-flex justify-content-between align-items-center">
+                    <Button variant="primary" size="sm" as={Link} to={`/Kambaz/Courses/${c._id}/Home`}>
+                      Go
+                    </Button>
+
+                    {isFaculty && (
+                      <div>
+                        <Button
+                          variant="warning"
+                          size="sm"
+                          className="me-2"
+                          onClick={() => setCourse(c)}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          variant="danger"
+                          size="sm"
+                          onClick={() => deleteCourse(c._id)}
+                        >
+                          Delete
+                        </Button>
+                      </div>
+                    )}
+
+                    <Button
+                      variant={isEnrolled ? "danger" : "success"}
+                      size="sm"
+                      className="ms-2"
+                      onClick={() =>
+                        dispatch(
+                          toggleEnrollment({
+                            userId: currentUser._id,
+                            courseId: c._id,
+                          })
+                        )
+                      }
+                    >
+                      {isEnrolled ? "Unenroll" : "Enroll"}
+                    </Button>
                   </Card.Body>
-                </Link>
-              </Card>
-            </Col>
-          ))}
+                </Card>
+              </Col>
+            );
+          })}
         </Row>
       </div>
     </div>

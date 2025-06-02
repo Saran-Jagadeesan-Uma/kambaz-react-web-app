@@ -4,7 +4,7 @@ const initialState = {
   currentUser: {
     _id: "123",
     username: "demoUser",
-    role: "USER",
+    role: "FACULTY  ",
     firstName: "Demo",
     
     lastName: "User",

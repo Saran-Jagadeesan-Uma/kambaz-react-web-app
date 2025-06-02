@@ -7,7 +7,7 @@ export default function AssignmentControlButtons() {
   const { cid } = useParams();
 
   function handleAddClick() {
-    navigate(`/Kambaz/Courses/${cid}/Assignments/New`);
+    navigate(`/Kambaz/Courses/${cid}/Assignments/new`);
   }
 
   return (

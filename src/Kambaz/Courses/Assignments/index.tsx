@@ -1,32 +1,84 @@
-import { useParams } from "react-router";
+import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { deleteAssignment } from "./reducer";
 import { ListGroup, Row, Col } from "react-bootstrap";
 import { BsGripVertical } from "react-icons/bs";
 import { HiOutlinePencilAlt, HiCheckCircle } from "react-icons/hi";
-import { FaEllipsisV } from "react-icons/fa";
-import { useSelector } from "react-redux";
 
-import AssignmentControlButtons from "./AssignmentControlButtons";
+import DeleteAssignmentDialog from "./AssignmentDeleteDialog";
+import AssignmentDeleteButton from "./AssignmentDeleteButton";
+
+import LessonControlButtons from "./LessonControlButtons";
 import AssignmentsControls from "./AssignmentsControls";
-import * as db from "../../Database";
+import AssignmentControlButtons from "./AssignmentControlButtons";
+
+type Assignment = {
+  _id: string;
+  title: string;
+  availableFromDate?: string;
+  dueDate?: string;
+  points: number;
+  course: string;
+};
 
 export default function Assignments() {
   const { cid } = useParams();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const assignments = db.assignments.filter(
-    (assignment) => assignment.course === cid
+  const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [assignmentToDelete, setAssignmentToDelete] = useState<string | null>(
+    null
   );
 
-  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const courseAssignments: Assignment[] = assignments.filter(
+    (assignment: Assignment) => assignment.course === cid
+  );
+
   const isFaculty = currentUser?.role === "FACULTY";
+
+  const handleDeleteClick = (assignmentId: string) => {
+    setAssignmentToDelete(assignmentId);
+    setShowDeleteDialog(true);
+  };
+
+  const confirmDelete = () => {
+    if (assignmentToDelete) {
+      dispatch(deleteAssignment(assignmentToDelete));
+    }
+    setShowDeleteDialog(false);
+    setAssignmentToDelete(null);
+  };
+
+  const cancelDelete = () => {
+    setShowDeleteDialog(false);
+    setAssignmentToDelete(null);
+  };
+
+  const formatDate = (dateString?: string) => {
+    if (!dateString) return "Not set";
+    return new Date(dateString).toLocaleDateString(undefined, {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    });
+  };
 
   return (
     <div className="wd-assignments p-4">
-      {/* Only FACULTY can see assignment creation controls */}
-      {isFaculty && <AssignmentsControls />}
-      <br />
-      <br />
-      <br />
-      <br />
+      {isFaculty && (
+        <AssignmentsControls
+          onAddAssignment={() =>
+            navigate(`/Kambaz/Courses/${cid}/Assignments/new`)
+          }
+          onAddGroup={() => {}}
+        />
+      )}
+
       <ListGroup id="wd-modules" className="rounded-0">
         <ListGroup.Item
           as="li"
@@ -41,19 +93,16 @@ export default function Assignments() {
           </div>
 
           <ListGroup as="ul" className="wd-lessons rounded-0">
-            {assignments.length === 0 ? (
+            {courseAssignments.length === 0 ? (
               <ListGroup.Item className="p-3 text-muted">
                 No assignments found for this course.
               </ListGroup.Item>
             ) : (
-              assignments.map(
-                ({
-                  _id,
-                  title,
-                  availableFrom,
-                  due,
-                  points,
-                }) => (
+              courseAssignments.map((assignment: Assignment) => {
+                const { _id, title, availableFromDate, dueDate, points } =
+                  assignment;
+
+                return (
                   <ListGroup.Item
                     as="li"
                     key={_id}
@@ -74,37 +123,41 @@ export default function Assignments() {
                           </a>
                         </b>
                         <div className="module-info text-secondary small">
-                          <span className="text-danger">Multiple Modules</span> |{" "}
-                          <b>Not available until</b>{" "}
-                          {new Date(availableFrom).toLocaleDateString(undefined, {
-                            year: "numeric",
-                            month: "2-digit",
-                            day: "2-digit",
-                          })}{" "}
-                          at 12:00 am | <b>Due</b>{" "}
-                          {new Date(due).toLocaleDateString(undefined, {
-                            year: "numeric",
-                            month: "2-digit",
-                            day: "2-digit",
-                          })}{" "}
-                          at 11:59 pm | {points} pts
+                          <span className="text-danger">Multiple Modules</span>{" "}
+                          | <b>Not available until</b>{" "}
+                          {formatDate(availableFromDate)} at 12:00 am |{" "}
+                          <b>Due</b> {formatDate(dueDate)} at 11:59 pm |{" "}
+                          {points} pts
                         </div>
                       </Col>
                       <Col
                         md={2}
                         className="text-end d-flex align-items-center justify-content-end"
                       >
+                        {isFaculty && (
+                          <>
+                            <AssignmentDeleteButton
+                              onDelete={() => handleDeleteClick(_id)}
+                            />
+                          </>
+                        )}
                         <HiCheckCircle className="me-3 text-success fs-4" />
-                        <FaEllipsisV className="text-secondary fs-5" />
+                        <LessonControlButtons />
                       </Col>
                     </Row>
                   </ListGroup.Item>
-                )
-              )
+                );
+              })
             )}
           </ListGroup>
         </ListGroup.Item>
       </ListGroup>
+
+      <DeleteAssignmentDialog
+        show={showDeleteDialog}
+        onCancel={cancelDelete}
+        onConfirm={confirmDelete}
+      />
     </div>
   );
 }

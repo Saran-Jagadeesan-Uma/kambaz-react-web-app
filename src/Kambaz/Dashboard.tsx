@@ -37,7 +37,6 @@ export default function Dashboard({
       <h1 id="wd-dashboard-title">Dashboard</h1>
       <hr />
 
-      {/* Only show if user is faculty */}
       {isFaculty && (
         <>
           <h5>
@@ -116,7 +115,6 @@ export default function Dashboard({
                     <div className="d-flex justify-content-between">
                       <Button variant="primary">Go</Button>
 
-                      {/* Only FACULTY can see Edit/Delete */}
                       {isFaculty && (
                         <div>
                           <Button

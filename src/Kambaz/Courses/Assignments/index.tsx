@@ -1,11 +1,13 @@
-import { useParams } from "react-router-dom";
-import * as db from "../../Database";
+import { useParams } from "react-router";
+import { ListGroup, Row, Col } from "react-bootstrap";
 import { BsGripVertical } from "react-icons/bs";
 import { HiOutlinePencilAlt, HiCheckCircle } from "react-icons/hi";
 import { FaEllipsisV } from "react-icons/fa";
-import { ListGroup, Row, Col } from "react-bootstrap";
+import { useSelector } from "react-redux";
+
 import AssignmentControlButtons from "./AssignmentControlButtons";
 import AssignmentsControls from "./AssignmentsControls";
+import * as db from "../../Database";
 
 export default function Assignments() {
   const { cid } = useParams();
@@ -14,9 +16,13 @@ export default function Assignments() {
     (assignment) => assignment.course === cid
   );
 
+  const { currentUser } = useSelector((state: any) => state.accountReducer);
+  const isFaculty = currentUser?.role === "FACULTY";
+
   return (
     <div className="wd-assignments p-4">
-      <AssignmentsControls />
+      {/* Only FACULTY can see assignment creation controls */}
+      {isFaculty && <AssignmentsControls />}
       <br />
       <br />
       <br />
@@ -31,7 +37,7 @@ export default function Assignments() {
               <BsGripVertical className="me-2 fs-3" />
               Assignments
             </div>
-            <AssignmentControlButtons />
+            {isFaculty && <AssignmentControlButtons />}
           </div>
 
           <ListGroup as="ul" className="wd-lessons rounded-0">

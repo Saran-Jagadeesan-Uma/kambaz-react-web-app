@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Link as ReactRouterLink } from "react-router-dom";
 import { Card, Row, Col, Button, FormControl } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleEnrollment, toggleShowAllEnrollments } from "./reducer";
+import { toggleEnrollment, toggleShowAllEnrollments } from "./Enrollmentreducer";
 
 type Enrollment = {
   user: string;

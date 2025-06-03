@@ -7,7 +7,7 @@ import {
   updateCourse,
   editCourse,
 } from "./Courses/reducer";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent } from "react";
 
 interface Course {
@@ -58,6 +58,8 @@ export default function Dashboard() {
     description: "New Description",
   });
 
+  const prevCoursesLength = useRef<number>(courses.length);
+
   const filteredCourses = showAllEnrollments
     ? courses
     : courses.filter((course) =>
@@ -95,6 +97,22 @@ export default function Dashboard() {
   const onDescriptionChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setEditingCourse({ ...editingCourse, description: e.target.value });
   };
+
+  useEffect(() => {
+    if (courses.length > prevCoursesLength.current) {
+      const newCourse = courses[courses.length - 1];
+      if (newCourse && currentUser && isFaculty) {
+        dispatch({
+          type: "enrollment/toggleEnrollment",
+          payload: {
+            userId: currentUser._id,
+            courseId: newCourse._id!,
+          },
+        });
+      }
+    }
+    prevCoursesLength.current = courses.length;
+  }, [courses, currentUser, dispatch]);
 
   return (
     <div id="wd-dashboard" className="p-4">

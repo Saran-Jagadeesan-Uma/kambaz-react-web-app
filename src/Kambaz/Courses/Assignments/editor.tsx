@@ -9,7 +9,11 @@ export default function AssignmentEditor() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { assignments } = useSelector((state: any) => state.assignmentsReducer);
+  const assignments = useSelector(
+    (state: any) => state.assignmentsReducer.assignments
+  );
+  const account = useSelector((state: any) => state.accountReducer.account);
+
   const isEditing = aid !== "new";
   const existingAssignment = isEditing
     ? assignments.find((a: any) => a._id === aid)
@@ -48,6 +52,15 @@ export default function AssignmentEditor() {
     }
     navigate(`/Kambaz/Courses/${cid}/Assignments`);
   };
+
+  if (account?.role !== "faculty") {
+    return (
+      <div className="container mt-5 text-center">
+        <h3 className="text-danger">Access Denied</h3>
+        <p>You must be a faculty member to access this page.</p>
+      </div>
+    );
+  }
 
   return (
     <div id="wd-assignments-editor" className="container mt-5">

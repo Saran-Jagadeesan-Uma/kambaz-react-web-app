@@ -12,7 +12,7 @@ export default function AssignmentEditor() {
   const assignments = useSelector(
     (state: any) => state.assignmentsReducer.assignments
   );
-  const account = useSelector((state: any) => state.accountReducer.account);
+  const account = useSelector((state: any) => state.accountReducer.currentUser);
 
   const isEditing = aid !== "new";
   const existingAssignment = isEditing
@@ -52,8 +52,9 @@ export default function AssignmentEditor() {
     }
     navigate(`/Kambaz/Courses/${cid}/Assignments`);
   };
+  const isFaculty = account?.role?.toUpperCase() === "FACULTY";
 
-  if (account?.role !== "faculty") {
+  if (!isFaculty) {
     return (
       <div className="container mt-5 text-center">
         <h3 className="text-danger">Access Denied</h3>

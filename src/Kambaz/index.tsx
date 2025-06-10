@@ -11,12 +11,13 @@ import Dashboard from "./Dashboard";
 import Session from "./Account/Session";
 import * as courseClient from "./Courses/client";
 import * as userClient from "./Account/client";
+import * as enrollmentClient from "./Account/client";
 
 export default function Kambaz() {
   const [courses, setCourses] = useState<any[]>([]);
   const [enrolling, setEnrolling] = useState<boolean>(false);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
-  
+
   const [course, setCourse] = useState<any>({
     _id: "1234",
     name: "New Course",
@@ -31,7 +32,7 @@ export default function Kambaz() {
       const courses = await userClient.findMyCourses();
       setCourses(courses);
     } catch (error) {
-      console.error(error);
+      console.error("Error finding my courses:", error);
     }
   };
 
@@ -39,30 +40,44 @@ export default function Kambaz() {
     try {
       const allCourses = await courseClient.fetchAllCourses();
       const enrolledCourses = await userClient.findMyCourses();
-      
+
       const courses = allCourses.map((course: any) => {
-        if (enrolledCourses.find((c: any) => c._id === course._id)) {
-          return { ...course, enrolled: true };
-        } else {
-          return course;
-        }
+        const isEnrolled = enrolledCourses.some((c: any) => c._id === course._id);
+        return { ...course, enrolled: isEnrolled };
       });
+
       setCourses(courses);
     } catch (error) {
-      console.error(error);
+      console.error("Error fetching all courses:", error);
     }
   };
 
   const updateEnrollment = async (courseId: string, enrolled: boolean) => {
-    setCourses(
-      courses.map((course) => {
-        if (course._id === courseId) {
-          return { ...course, enrolled: enrolled };
+    try {
+      await enrollmentClient.toggleEnrollment(courseId);
+
+      if (enrolling) {
+        // In "All Courses" view, just toggle the enrolled flag
+        setCourses((prevCourses) =>
+          prevCourses.map((course) =>
+            course._id === courseId ? { ...course, enrolled: !enrolled } : course
+          )
+        );
+      } else {
+        // In "Enrolled Courses" view
+        if (enrolled) {
+          // Unenrolling: remove course
+          setCourses((prevCourses) =>
+            prevCourses.filter((course) => course._id !== courseId)
+          );
         } else {
-          return course;
+          // Enrolling: refetch to get updated list
+          findCoursesForUser();
         }
-      })
-    );
+      }
+    } catch (error) {
+      console.error("Error updating enrollment:", error);
+    }
   };
 
   const addCourse = async () => {
@@ -77,7 +92,9 @@ export default function Kambaz() {
   const deleteCourse = async (courseId: string) => {
     try {
       await courseClient.deleteCourse(courseId);
-      setCourses(courses.filter((course) => course._id !== courseId));
+      setCourses((prevCourses) =>
+        prevCourses.filter((course) => course._id !== courseId)
+      );
     } catch (error) {
       console.error("Error deleting course:", error);
     }
@@ -86,14 +103,8 @@ export default function Kambaz() {
   const updateCourse = async () => {
     try {
       await courseClient.updateCourse(course);
-      setCourses(
-        courses.map((c) => {
-          if (c._id === course._id) {
-            return course;
-          } else {
-            return c;
-          }
-        })
+      setCourses((prevCourses) =>
+        prevCourses.map((c) => (c._id === course._id ? course : c))
       );
     } catch (error) {
       console.error("Error updating course:", error);

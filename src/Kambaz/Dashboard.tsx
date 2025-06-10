@@ -93,7 +93,7 @@ export default function Dashboard({
         <Row xs={1} md={5} className="g-4">
           {courses.map((c) => {
             const imageUrl = c.image || defaultImageUrl;
-            const isEnrolled = !!c.enrolled;
+            const isEnrolled = Boolean(c.enrolled);
 
             return (
               <Col
@@ -165,7 +165,7 @@ export default function Dashboard({
                           size="sm"
                           onClick={(e) => {
                             e.preventDefault(); // prevent card navigation
-                            updateEnrollment(c._id, !isEnrolled);
+                            updateEnrollment(c._id, isEnrolled); // ✅ Pass current value!
                           }}
                         >
                           {isEnrolled ? "Unenroll" : "Enroll"}

@@ -1,7 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { deleteAssignment } from "./reducer";
+import {
+  deleteAssignment as deleteAssignmentReducer,
+  editAssignment,
+} from "./reducer";
+import * as assignmentsClient from "./client";
 import { ListGroup, Row, Col } from "react-bootstrap";
 import { BsGripVertical } from "react-icons/bs";
 import { HiOutlinePencilAlt, HiCheckCircle } from "react-icons/hi";
@@ -35,20 +39,29 @@ export default function Assignments() {
     null
   );
 
+  const isFaculty = currentUser?.role === "FACULTY";
+
+  useEffect(() => {
+    const fetchAssignments = async () => {
+      const data = await assignmentsClient.findAllAssignments();
+      dispatch(editAssignment(data));
+    };
+    fetchAssignments();
+  }, [cid, dispatch]);
+
   const courseAssignments: Assignment[] = assignments.filter(
     (assignment: Assignment) => assignment.course === cid
   );
-
-  const isFaculty = currentUser?.role === "FACULTY";
 
   const handleDeleteClick = (assignmentId: string) => {
     setAssignmentToDelete(assignmentId);
     setShowDeleteDialog(true);
   };
 
-  const confirmDelete = () => {
+  const confirmDelete = async () => {
     if (assignmentToDelete) {
-      dispatch(deleteAssignment(assignmentToDelete));
+      await assignmentsClient.deleteAssignment(assignmentToDelete);
+      dispatch(deleteAssignmentReducer(assignmentToDelete));
     }
     setShowDeleteDialog(false);
     setAssignmentToDelete(null);

@@ -10,6 +10,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent } from "react";
 
+
 interface Course {
   _id?: string;
   name: string;
@@ -33,7 +34,7 @@ interface RootState {
   };
   enrollmentReducer: {
     enrollments: Enrollment[];
-    showAllEnrollments: boolean;
+    showAllEnrollments: boolean; 
   };
   courses: {
     courses: Course[];
@@ -46,9 +47,11 @@ export default function Dashboard() {
   const currentUser = useSelector(
     (state: RootState) => state.accountReducer.currentUser
   );
-  const { enrollments, showAllEnrollments } = useSelector(
+
+  const { enrollments } = useSelector(
     (state: RootState) => state.enrollmentReducer
   );
+
   const courses = useSelector((state: RootState) => state.courses.courses);
 
   const isFaculty = currentUser?.role === "FACULTY";
@@ -60,15 +63,7 @@ export default function Dashboard() {
 
   const prevCoursesLength = useRef<number>(courses.length);
 
-  const filteredCourses = showAllEnrollments
-    ? courses
-    : courses.filter((course) =>
-        enrollments.some(
-          (enrollment: Enrollment) =>
-            enrollment.user === currentUser?._id &&
-            enrollment.course === course._id
-        )
-      );
+  const displayedCourses = courses; 
 
   const defaultImageUrl = "/images/reactjs.jpg";
 
@@ -112,7 +107,7 @@ export default function Dashboard() {
       }
     }
     prevCoursesLength.current = courses.length;
-  }, [courses, currentUser, dispatch]);
+  }, [courses, currentUser, dispatch, isFaculty]); 
 
   return (
     <div id="wd-dashboard" className="p-4">
@@ -160,25 +155,14 @@ export default function Dashboard() {
 
       <div className="d-flex justify-content-between align-items-center">
         <h2 id="wd-dashboard-published">
-          Published Courses ({filteredCourses.length})
+          Published Courses ({displayedCourses.length})
         </h2>
-
-        {!isFaculty && (
-          <Button
-            onClick={() =>
-              dispatch({ type: "enrollment/toggleShowAllEnrollments" })
-            }
-            variant="primary"
-          >
-            {showAllEnrollments ? "Show Enrolled Only" : "Show All Courses"}
-          </Button>
-        )}
       </div>
       <hr />
 
       <div id="wd-dashboard-courses">
         <Row xs={1} md={5} className="g-4">
-          {filteredCourses.map((c: Course) => {
+          {displayedCourses.map((c: Course) => {
             const isEnrolled = enrollments.some(
               (enrollment: Enrollment) =>
                 enrollment.user === currentUser?._id &&
@@ -244,7 +228,7 @@ export default function Dashboard() {
                       </div>
                     )}
 
-                    {!isFaculty && (
+                    {!isFaculty && currentUser && ( 
                       <Button
                         variant={isEnrolled ? "danger" : "success"}
                         size="sm"
@@ -253,7 +237,7 @@ export default function Dashboard() {
                           dispatch({
                             type: "enrollment/toggleEnrollment",
                             payload: {
-                              userId: currentUser!._id,
+                              userId: currentUser._id,
                               courseId: c._id!,
                             },
                           })

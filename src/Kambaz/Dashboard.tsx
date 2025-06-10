@@ -2,9 +2,9 @@ import { Link as ReactRouterLink } from "react-router-dom";
 import { Card, Row, Col, Button, FormControl } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
-    addCourse,
-    deleteCourse,
-    updateCourse,
+      addCourse,
+      deleteCourse,
+      updateCourse,
 } from "./Courses/reducer";
 import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent } from "react";

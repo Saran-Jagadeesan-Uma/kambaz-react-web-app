@@ -32,3 +32,5 @@ export const createModuleForCourse = async (courseId: string, module: any) => {
   );
   return response.data;
 };
+
+

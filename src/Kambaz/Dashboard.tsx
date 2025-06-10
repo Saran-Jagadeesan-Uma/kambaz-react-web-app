@@ -2,10 +2,9 @@ import { Link as ReactRouterLink } from "react-router-dom";
 import { Card, Row, Col, Button, FormControl } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  addCourse,
-  deleteCourse,
-  updateCourse,
-  editCourse,
+    addCourse,
+    deleteCourse,
+    updateCourse,
 } from "./Courses/reducer";
 import { useEffect, useRef, useState } from "react";
 import type { ChangeEvent } from "react";
@@ -72,22 +71,24 @@ export default function Dashboard() {
 
   const defaultImageUrl = "/images/reactjs.jpg";
 
-  const handleAddNewCourse = () => {
-    dispatch(addCourse(editingCourse));
+  const handleSaveCourse = () => {
+    if (editingCourse._id) {
+      dispatch(updateCourse(editingCourse));
+    } else {
+      dispatch(addCourse(editingCourse));
+    }
     setEditingCourse({ name: "", description: "" });
   };
 
-  const handleUpdateCourse = () => {
-    if (!editingCourse._id) return;
-    dispatch(updateCourse(editingCourse));
-    setEditingCourse({ name: "", description: "" });
+  const handleDeleteCourse = (courseId: string) => {
+    dispatch(deleteCourse(courseId));
+    if (editingCourse._id === courseId) {
+      setEditingCourse({ name: "", description: "" });
+    }
   };
 
   const handleEditClick = (course: Course) => {
     setEditingCourse(course);
-    if (course._id) {
-      dispatch(editCourse(course._id));
-    }
   };
 
   const onNameChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -112,7 +113,7 @@ export default function Dashboard() {
       }
     }
     prevCoursesLength.current = courses.length;
-  }, [courses, currentUser, dispatch]);
+  }, [courses, currentUser, dispatch, isFaculty]);
 
   return (
     <div id="wd-dashboard" className="p-4">
@@ -122,22 +123,23 @@ export default function Dashboard() {
       {isFaculty && (
         <>
           <h5>
-            New Course
+            Course Editor
             <Button
               className="btn btn-primary float-end ms-2"
-              onClick={handleAddNewCourse}
-              id="wd-add-new-course-click"
+              onClick={handleSaveCourse}
+              id="wd-save-course-click"
+              disabled={!editingCourse.name || !editingCourse.description}
             >
-              Add
+              {editingCourse._id ? "Update" : "Add"}
             </Button>
-            <Button
-              className="btn btn-warning float-end"
-              onClick={handleUpdateCourse}
-              id="wd-update-course-click"
-              disabled={!editingCourse._id}
-            >
-              Update
-            </Button>
+            {editingCourse._id && (
+              <Button
+                className="btn btn-secondary float-end"
+                onClick={() => setEditingCourse({ name: "", description: "" })}
+              >
+                Cancel
+              </Button>
+            )}
           </h5>
 
           <FormControl
@@ -237,7 +239,7 @@ export default function Dashboard() {
                         <Button
                           variant="danger"
                           size="sm"
-                          onClick={() => dispatch(deleteCourse(c._id!))}
+                          onClick={() => handleDeleteCourse(c._id!)}
                         >
                           Delete
                         </Button>

@@ -1,10 +1,11 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { v4 as uuidv4 } from "uuid";
+
 interface Module {
   _id: string;
   name: string;
   course: string;
-  lessons: any[];  
+  lessons: any[];
   editing?: boolean;
 }
 
@@ -23,12 +24,15 @@ const modulesSlice = createSlice({
     setModules: (state, action: PayloadAction<Module[]>) => {
       state.modules = action.payload;
     },
-    addModule: (state, action: PayloadAction<{ name: string; course: string }>) => {
+    addModule: (
+      state,
+      action: PayloadAction<{ name: string; course: string }>
+    ) => {
       const newModule: Module = {
         _id: uuidv4(),
-        lessons: [],
         name: action.payload.name,
         course: action.payload.course,
+        lessons: [],
       };
       state.modules.push(newModule);
     },
@@ -48,12 +52,7 @@ const modulesSlice = createSlice({
   },
 });
 
-export const {
-  setModules,
-  addModule,
-  deleteModule,
-  updateModule,
-  editModule,
-} = modulesSlice.actions;
+export const { setModules, addModule, deleteModule, updateModule, editModule } =
+  modulesSlice.actions;
 
 export default modulesSlice.reducer;

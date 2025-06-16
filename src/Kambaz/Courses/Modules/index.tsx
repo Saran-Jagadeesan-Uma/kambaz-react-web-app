@@ -1,18 +1,18 @@
 import { useParams } from "react-router";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useState } from "react";
 import { ListGroup, FormControl } from "react-bootstrap";
 import { BsGripVertical } from "react-icons/bs";
-import { useSelector, useDispatch } from "react-redux";
-import { useState, useEffect } from "react";
-import * as modulesClient from "./client";
 
+import * as courseClient from "../client";
+import * as modulesClient from "./client";
 import {
-  setModules,
   addModule,
   editModule,
   updateModule,
   deleteModule,
+  setModules,
 } from "./Coursereducer";
-import * as coursesClient from "../client";
 
 import ModulesControls from "./ModulesControls";
 import ModuleControlButtons from "./ModuleControlButtons";
@@ -24,25 +24,27 @@ export default function Modules() {
   const { modules } = useSelector((state: any) => state.modulesReducer);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
   const isFaculty = currentUser?.role === "FACULTY";
+
   const [moduleName, setModuleName] = useState("");
 
-  const fetchModules = async () => {
+  const fetchModulesForCourse = async () => {
     if (!cid) return;
-    const modules = await coursesClient.findModulesForCourse(cid);
+    const modules = await courseClient.findModulesForCourse(cid);
     dispatch(setModules(modules));
   };
 
   useEffect(() => {
-    fetchModules();
+    fetchModulesForCourse();
   }, [cid]);
 
   const createModuleForCourse = async () => {
     if (!cid) return;
-    const module = await coursesClient.createModuleForCourse(cid, {
+    const module = await courseClient.createModuleForCourse(cid, {
       name: moduleName,
       course: cid,
     });
-    dispatch(addModule(module)); // ✅ use backend's returned _id
+    dispatch(addModule(module));
+    setModuleName("");
   };
 
   const removeModule = async (moduleId: string) => {
@@ -51,7 +53,6 @@ export default function Modules() {
   };
 
   const saveModule = async (module: any) => {
-    console.log("Attempting to update module:", module); // ✅ log before calling API
     const updatedModule = await modulesClient.updateModule(module);
     dispatch(updateModule({ ...updatedModule, editing: false }));
   };
@@ -66,9 +67,6 @@ export default function Modules() {
         />
       )}
       <br />
-      <br />
-      <br />
-
       <ListGroup id="wd-modules" className="rounded-0">
         {modules.map((module: any) => (
           <ListGroup.Item

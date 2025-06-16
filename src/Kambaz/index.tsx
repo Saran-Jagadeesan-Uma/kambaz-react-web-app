@@ -10,12 +10,9 @@ import { useSelector } from "react-redux";
 import Dashboard from "./Dashboard";
 import Session from "./Account/Session";
 import * as courseClient from "./Courses/client";
-import * as userClient from "./Account/client";
-import * as enrollmentClient from "./Account/client";
 
 export default function Kambaz() {
   const [courses, setCourses] = useState<any[]>([]);
-  const [enrolling, setEnrolling] = useState<boolean>(false);
   const { currentUser } = useSelector((state: any) => state.accountReducer);
 
   const [course, setCourse] = useState<any>({
@@ -27,62 +24,18 @@ export default function Kambaz() {
     description: "New Description",
   });
 
-  const findCoursesForUser = async () => {
-    try {
-      const courses = await userClient.findMyCourses();
-      setCourses(courses);
-    } catch (error) {
-      console.error("Error finding my courses:", error);
-    }
-  };
-
   const fetchCourses = async () => {
     try {
-      const allCourses = await courseClient.fetchAllCourses();
-      const enrolledCourses = await userClient.findMyCourses();
-
-      const courses = allCourses.map((course: any) => {
-        const isEnrolled = enrolledCourses.some((c: any) => c._id === course._id);
-        return { ...course, enrolled: isEnrolled };
-      });
-
+      const courses = await courseClient.fetchAllCourses();
       setCourses(courses);
     } catch (error) {
       console.error("Error fetching all courses:", error);
     }
   };
 
-  const updateEnrollment = async (courseId: string, enrolled: boolean) => {
-    try {
-      await enrollmentClient.toggleEnrollment(courseId);
-
-      if (enrolling) {
-        // In "All Courses" view, just toggle the enrolled flag
-        setCourses((prevCourses) =>
-          prevCourses.map((course) =>
-            course._id === courseId ? { ...course, enrolled: !enrolled } : course
-          )
-        );
-      } else {
-        // In "Enrolled Courses" view
-        if (enrolled) {
-          // Unenrolling: remove course
-          setCourses((prevCourses) =>
-            prevCourses.filter((course) => course._id !== courseId)
-          );
-        } else {
-          // Enrolling: refetch to get updated list
-          findCoursesForUser();
-        }
-      }
-    } catch (error) {
-      console.error("Error updating enrollment:", error);
-    }
-  };
-
   const addCourse = async () => {
     try {
-      const newCourse = await userClient.createCourse(course);
+      const newCourse = await courseClient.createCourse(course);
       setCourses([...courses, newCourse]);
     } catch (error) {
       console.error("Error adding course:", error);
@@ -113,13 +66,9 @@ export default function Kambaz() {
 
   useEffect(() => {
     if (currentUser) {
-      if (enrolling) {
-        fetchCourses();
-      } else {
-        findCoursesForUser();
-      }
+      fetchCourses();
     }
-  }, [currentUser, enrolling]);
+  }, [currentUser]);
 
   return (
     <Session>
@@ -140,9 +89,9 @@ export default function Kambaz() {
                     addCourse={addCourse}
                     deleteCourse={deleteCourse}
                     updateCourse={updateCourse}
-                    enrolling={enrolling}
-                    setEnrolling={setEnrolling}
-                    updateEnrollment={updateEnrollment}
+                    enrolling={false} // Pass false if prop is required
+                    setEnrolling={() => {}} // No-op if required
+                    updateEnrollment={() => {}} // No-op if required
                   />
                 </ProtectedRoute>
               }

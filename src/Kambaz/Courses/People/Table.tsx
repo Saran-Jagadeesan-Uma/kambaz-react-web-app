@@ -1,12 +1,14 @@
 import { Table } from "react-bootstrap";
 import { FaUserCircle } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import PeopleDetails from "./Details";
 
 export default function PeopleTable({ users = [] }: { users?: any[] }) {
+  const { uid } = useParams(); // detect if user is selected
+
   return (
     <div id="wd-people-table" className="p-3">
-      <PeopleDetails />
+      {uid && <PeopleDetails />} {/* show details only if uid is in URL */}
       <Table striped bordered hover>
         <thead>
           <tr>
@@ -24,7 +26,7 @@ export default function PeopleTable({ users = [] }: { users?: any[] }) {
               <tr key={user._id}>
                 <td className="wd-full-name text-nowrap">
                   <Link
-                    to={`/Kambaz/Account/Users/${user._id}`}
+                    to={`/Kambaz/Courses/${user.course}/People/${user._id}`}
                     className="text-decoration-none"
                   >
                     <FaUserCircle className="me-2 fs-1 text-secondary" />

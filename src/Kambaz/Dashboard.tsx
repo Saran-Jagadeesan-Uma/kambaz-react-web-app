@@ -164,8 +164,8 @@ export default function Dashboard({
                           variant={isEnrolled ? "danger" : "success"}
                           size="sm"
                           onClick={(e) => {
-                            e.preventDefault(); // prevent card navigation
-                            updateEnrollment(c._id, isEnrolled); // ✅ Pass current value!
+                            e.preventDefault();
+                            updateEnrollment(c._id, isEnrolled);
                           }}
                         >
                           {isEnrolled ? "Unenroll" : "Enroll"}
@@ -178,6 +178,14 @@ export default function Dashboard({
             );
           })}
         </Row>
+
+        {courses.length === 0 && (
+          <p className="text-muted mt-4">
+            {enrolling
+              ? "No courses available."
+              : "You are not enrolled in any courses."}
+          </p>
+        )}
       </div>
     </div>
   );

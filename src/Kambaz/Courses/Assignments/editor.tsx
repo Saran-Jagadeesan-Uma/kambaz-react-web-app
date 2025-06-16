@@ -3,6 +3,7 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Form, Button, Row, Col } from "react-bootstrap";
 import { addAssignment, updateAssignment } from "./reducer";
+import * as assignmentsClient from "./client";
 
 export default function AssignmentEditor() {
   const { cid, aid } = useParams();
@@ -25,9 +26,12 @@ export default function AssignmentEditor() {
     points: 100,
     dueDate: "",
     availableFromDate: "",
-    availableUntilDate: "",
+    availableUntil: "", // Fixed field name to match schema
     course: cid || "",
   });
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (isEditing && existingAssignment) {
@@ -37,21 +41,47 @@ export default function AssignmentEditor() {
         points: existingAssignment.points || 100,
         dueDate: existingAssignment.dueDate || "",
         availableFromDate: existingAssignment.availableFromDate || "",
-        availableUntilDate: existingAssignment.availableUntilDate || "",
+        availableUntil: existingAssignment.availableUntil || "",
         course: existingAssignment.course || cid || "",
       });
     }
   }, [isEditing, existingAssignment, cid]);
 
-  const handleSave = (e: React.FormEvent) => {
+  const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (isEditing) {
-      dispatch(updateAssignment({ ...assignment, _id: aid }));
-    } else {
-      dispatch(addAssignment(assignment));
+    setLoading(true);
+    setError(null);
+
+    try {
+      if (isEditing && aid) {
+        // Update existing assignment
+        const updatedAssignment = await assignmentsClient.updateAssignment({
+          ...assignment,
+          _id: aid,
+        });
+        dispatch(updateAssignment(updatedAssignment));
+        console.log("Assignment updated successfully");
+      } else {
+        // Create new assignment
+        const newAssignmentData = {
+          ...assignment,
+          _id: `temp-${Date.now()}`, // Temporary ID
+        };
+        const createdAssignment = await assignmentsClient.createAssignment(
+          newAssignmentData
+        );
+        dispatch(addAssignment(createdAssignment));
+        console.log("Assignment created successfully");
+      }
+      navigate(`/Kambaz/Courses/${cid}/Assignments`);
+    } catch (err) {
+      console.error("Error saving assignment:", err);
+      setError("Failed to save assignment. Please try again.");
+    } finally {
+      setLoading(false);
     }
-    navigate(`/Kambaz/Courses/${cid}/Assignments`);
   };
+
   const isFaculty = account?.role?.toUpperCase() === "FACULTY";
 
   if (!isFaculty) {
@@ -65,6 +95,12 @@ export default function AssignmentEditor() {
 
   return (
     <div id="wd-assignments-editor" className="container mt-5">
+      {error && (
+        <div className="alert alert-danger" role="alert">
+          {error}
+        </div>
+      )}
+
       <Form onSubmit={handleSave}>
         <Form.Group controlId="wd-name" className="mb-4">
           <Form.Label>
@@ -75,12 +111,24 @@ export default function AssignmentEditor() {
             onChange={(e) =>
               setAssignment({ ...assignment, title: e.target.value })
             }
+            required
           />
         </Form.Group>
 
-        <Form.Label>
-          <h4>Description</h4>
-        </Form.Label>
+        <Form.Group controlId="wd-description" className="mb-4">
+          <Form.Label>
+            <h4>Description</h4>
+          </Form.Label>
+          <Form.Control
+            as="textarea"
+            rows={4}
+            value={assignment.description}
+            onChange={(e) =>
+              setAssignment({ ...assignment, description: e.target.value })
+            }
+            placeholder="Enter assignment description..."
+          />
+        </Form.Group>
 
         <div
           className="form-control mb-4"
@@ -124,6 +172,7 @@ export default function AssignmentEditor() {
                   points: parseInt(e.target.value) || 0,
                 })
               }
+              min="0"
             />
           </Col>
         </Form.Group>
@@ -225,11 +274,11 @@ export default function AssignmentEditor() {
                   <Form.Label>Available until</Form.Label>
                   <Form.Control
                     type="date"
-                    value={assignment.availableUntilDate}
+                    value={assignment.availableUntil}
                     onChange={(e) =>
                       setAssignment({
                         ...assignment,
-                        availableUntilDate: e.target.value,
+                        availableUntil: e.target.value,
                       })
                     }
                   />
@@ -247,8 +296,8 @@ export default function AssignmentEditor() {
               Cancel
             </Button>
           </Link>
-          <Button variant="danger" type="submit">
-            Save
+          <Button variant="danger" type="submit" disabled={loading}>
+            {loading ? "Saving..." : "Save"}
           </Button>
         </div>
       </Form>

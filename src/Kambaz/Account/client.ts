@@ -88,3 +88,16 @@ export const createUser = async (user: any) => {
   const response = await axios.post(`${USERS_API}`, user);
   return response.data;
 };
+export const findCoursesForUser = async (userId: string) => {
+  const response = await axiosWithCredentials.get(
+    `${USERS_API}/${userId}/courses`
+  );
+  return response.data;
+};
+export const enrollIntoCourse = async (_userId: string, courseId: string) => {
+  return axiosWithCredentials.post(`${ENROLLMENTS_API}`, { courseId });
+};
+
+export const unenrollFromCourse = async (_userId: string, courseId: string) => {
+  return axiosWithCredentials.post(`${ENROLLMENTS_API}`, { courseId });
+};

@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {
   deleteAssignment as deleteAssignmentReducer,
-  editAssignment,
+  setAssignments,
 } from "./reducer";
 import * as assignmentsClient from "./client";
 import { ListGroup, Row, Col } from "react-bootstrap";
@@ -24,6 +24,7 @@ type Assignment = {
   dueDate?: string;
   points: number;
   course: string;
+  description?: string;
 };
 
 export default function Assignments() {
@@ -38,17 +39,38 @@ export default function Assignments() {
   const [assignmentToDelete, setAssignmentToDelete] = useState<string | null>(
     null
   );
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const isFaculty = currentUser?.role === "FACULTY";
 
   useEffect(() => {
     const fetchAssignments = async () => {
-      const data = await assignmentsClient.findAllAssignments();
-      dispatch(editAssignment(data));
+      if (!cid) return;
+
+      try {
+        setLoading(true);
+        setError(null);
+        console.log("Fetching assignments for course:", cid);
+
+        // Use course-specific API instead of findAllAssignments
+        const data = await assignmentsClient.findAssignmentsForCourse(cid);
+        console.log("Fetched assignments:", data);
+
+        // Use setAssignments instead of editAssignment
+        dispatch(setAssignments(data));
+      } catch (err) {
+        console.error("Error fetching assignments:", err);
+        setError("Failed to load assignments");
+      } finally {
+        setLoading(false);
+      }
     };
+
     fetchAssignments();
   }, [cid, dispatch]);
 
+  // Filter assignments by course (as backup, but should not be needed with course-specific API)
   const courseAssignments: Assignment[] = assignments.filter(
     (assignment: Assignment) => assignment.course === cid
   );
@@ -60,8 +82,14 @@ export default function Assignments() {
 
   const confirmDelete = async () => {
     if (assignmentToDelete) {
-      await assignmentsClient.deleteAssignment(assignmentToDelete);
-      dispatch(deleteAssignmentReducer(assignmentToDelete));
+      try {
+        await assignmentsClient.deleteAssignment(assignmentToDelete);
+        dispatch(deleteAssignmentReducer(assignmentToDelete));
+        console.log("Assignment deleted successfully");
+      } catch (error) {
+        console.error("Error deleting assignment:", error);
+        setError("Failed to delete assignment");
+      }
     }
     setShowDeleteDialog(false);
     setAssignmentToDelete(null);
@@ -74,12 +102,32 @@ export default function Assignments() {
 
   const formatDate = (dateString?: string) => {
     if (!dateString) return "Not set";
-    return new Date(dateString).toLocaleDateString(undefined, {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    });
+    try {
+      return new Date(dateString).toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      });
+    } catch (error) {
+      return "Invalid date";
+    }
   };
+
+  if (loading) {
+    return (
+      <div className="wd-assignments p-4">
+        <div className="text-center">Loading assignments...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="wd-assignments p-4">
+        <div className="alert alert-danger">{error}</div>
+      </div>
+    );
+  }
 
   return (
     <div className="wd-assignments p-4">

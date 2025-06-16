@@ -42,7 +42,7 @@ export default function Modules() {
       name: moduleName,
       course: cid,
     });
-    dispatch(addModule(module)); // ✅ use backend's returned _id
+    dispatch(addModule(module));
   };
 
   const removeModule = async (moduleId: string) => {
@@ -51,7 +51,7 @@ export default function Modules() {
   };
 
   const saveModule = async (module: any) => {
-    console.log("Attempting to update module:", module); // ✅ log before calling API
+    console.log("Attempting to update module:", module); 
     const updatedModule = await modulesClient.updateModule(module);
     dispatch(updateModule({ ...updatedModule, editing: false }));
   };

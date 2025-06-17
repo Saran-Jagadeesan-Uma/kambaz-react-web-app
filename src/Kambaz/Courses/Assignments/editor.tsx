@@ -26,7 +26,7 @@ export default function AssignmentEditor() {
     points: 100,
     dueDate: "",
     availableFromDate: "",
-    availableUntil: "", // Fixed field name to match schema
+    availableUntil: "",
     course: cid || "",
   });
 
@@ -54,7 +54,6 @@ export default function AssignmentEditor() {
 
     try {
       if (isEditing && aid) {
-        // Update existing assignment
         const updatedAssignment = await assignmentsClient.updateAssignment({
           ...assignment,
           _id: aid,
@@ -62,10 +61,9 @@ export default function AssignmentEditor() {
         dispatch(updateAssignment(updatedAssignment));
         console.log("Assignment updated successfully");
       } else {
-        // Create new assignment
         const newAssignmentData = {
           ...assignment,
-          _id: `temp-${Date.now()}`, // Temporary ID
+          _id: `temp-${Date.now()}`,
         };
         const createdAssignment = await assignmentsClient.createAssignment(
           newAssignmentData

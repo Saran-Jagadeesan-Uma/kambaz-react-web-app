@@ -4,11 +4,11 @@ import { Link, useParams } from "react-router-dom";
 import PeopleDetails from "./Details";
 
 export default function PeopleTable({ users = [] }: { users?: any[] }) {
-  const { uid } = useParams(); // detect if user is selected
+  const { uid } = useParams();
 
   return (
     <div id="wd-people-table" className="p-3">
-      {uid && <PeopleDetails />} {/* show details only if uid is in URL */}
+      {uid && <PeopleDetails />}
       <Table striped bordered hover>
         <thead>
           <tr>

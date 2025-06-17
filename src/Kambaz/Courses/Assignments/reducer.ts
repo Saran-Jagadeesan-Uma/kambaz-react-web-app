@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 export interface Assignment {
-  _id?: string; // Made optional to handle new assignments
+  _id?: string; 
   title: string;
   description?: string;
   points: number;
@@ -11,13 +11,12 @@ export interface Assignment {
   course: string;
 }
 
-// Interface for assignments that definitely have an ID (from database)
 export interface SavedAssignment extends Assignment {
   _id: string;
 }
 
 export interface AssignmentsState {
-  assignments: SavedAssignment[]; // Use SavedAssignment since these come from DB
+  assignments: SavedAssignment[]; 
   currentAssignment: Assignment | null;
 }
 
@@ -35,11 +34,9 @@ const assignmentsSlice = createSlice({
     },
 
     addAssignment: (state, action: PayloadAction<Assignment>) => {
-      // For new assignments, we'll add them with a temporary ID
-      // The backend will assign the real ID
       const newAssignment: SavedAssignment = {
         ...action.payload,
-        _id: action.payload._id || `temp-${Date.now()}`, // Temporary ID if not provided
+        _id: action.payload._id || `temp-${Date.now()}`, 
       };
       state.assignments.push(newAssignment);
     },

@@ -53,11 +53,9 @@ export default function Assignments() {
         setError(null);
         console.log("Fetching assignments for course:", cid);
 
-        // Use course-specific API instead of findAllAssignments
         const data = await assignmentsClient.findAssignmentsForCourse(cid);
         console.log("Fetched assignments:", data);
 
-        // Use setAssignments instead of editAssignment
         dispatch(setAssignments(data));
       } catch (err) {
         console.error("Error fetching assignments:", err);
@@ -70,7 +68,6 @@ export default function Assignments() {
     fetchAssignments();
   }, [cid, dispatch]);
 
-  // Filter assignments by course (as backup, but should not be needed with course-specific API)
   const courseAssignments: Assignment[] = assignments.filter(
     (assignment: Assignment) => assignment.course === cid
   );

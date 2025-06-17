@@ -1,4 +1,3 @@
-// src/Kambaz/Courses/People/index.tsx
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import * as client from "../client";

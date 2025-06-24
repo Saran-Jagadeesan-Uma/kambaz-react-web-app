@@ -6,7 +6,11 @@ import { useParams, useNavigate } from "react-router";
 import { FormControl } from "react-bootstrap";
 import * as client from "../../Account/client";
 
-export default function PeopleDetails() {
+export default function PeopleDetails({
+  allowEdit = true,
+}: {
+  allowEdit?: boolean;
+}) {
   const { uid } = useParams();
   const [user, setUser] = useState<any>({});
   const [name, setName] = useState("");
@@ -54,24 +58,27 @@ export default function PeopleDetails() {
       </div>
       <hr />
       <div className="text-danger fs-4">
-        {!editing && (
+        {allowEdit && !editing && (
           <FaPencil
             onClick={() => setEditing(true)}
             className="float-end fs-5 mt-2 wd-edit"
           />
         )}
-        {editing && (
+        {allowEdit && editing && (
           <FaCheck
             onClick={() => saveUser()}
             className="float-end fs-5 mt-2 me-2 wd-save"
           />
         )}
         {!editing && (
-          <div className="wd-name" onClick={() => setEditing(true)}>
+          <div
+            className="wd-name"
+            onClick={() => allowEdit && setEditing(true)}
+          >
             {user.firstName} {user.lastName}
           </div>
         )}
-        {editing && (
+        {allowEdit && editing && (
           <FormControl
             className="w-50 wd-edit-name"
             value={name}
@@ -90,18 +97,22 @@ export default function PeopleDetails() {
       <b>Total Activity:</b>{" "}
       <span className="wd-total-activity">{user.totalActivity}</span>
       <hr />
-      <button
-        onClick={() => deleteUser(uid)}
-        className="btn btn-danger float-end wd-delete"
-      >
-        Delete
-      </button>
-      <button
-        onClick={() => navigate(-1)}
-        className="btn btn-secondary float-start float-end me-2 wd-cancel"
-      >
-        Cancel
-      </button>
+      {allowEdit && (
+        <>
+          <button
+            onClick={() => deleteUser(uid)}
+            className="btn btn-danger float-end wd-delete"
+          >
+            Delete
+          </button>
+          <button
+            onClick={() => navigate(-1)}
+            className="btn btn-secondary float-start float-end me-2 wd-cancel"
+          >
+            Cancel
+          </button>
+        </>
+      )}
     </div>
   );
 }
